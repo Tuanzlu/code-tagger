@@ -60,7 +60,7 @@ export default defineComponent({
   height: 70px;
 }
 .logo {
-  margin: 10px;
+  margin: 10px 10px 10px 20px;
   height: 45px;
 }
 </style>
