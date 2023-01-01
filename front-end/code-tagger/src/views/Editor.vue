@@ -11,6 +11,8 @@
           <template #icon><delete-outlined /></template>
           删除
         </a-button>
+        <button @click="changeTheme($event)">黑夜</button>
+        <button @click="changeMode($event)">C++</button>
         <a-select v-model:value="mode" style="width: 100px">
           <a-select-option value="cpp">C++</a-select-option>
           <a-select-option value="asm">asm</a-select-option>
@@ -18,10 +20,18 @@
       </div>
       <codemirror
         v-model="code"
-        ref="cm"
-        placeholder="Code goes here..."
-        :style="{ minHeight: '450px', border: 'solid #6c6c6c 1px' }"
-        :options="cmOptions"
+        placeholder="Code gose here..."
+        :style="style"
+        :mode="mode"
+        :spellcheck="spellcheck"
+        :autofocus="autofocus"
+        :indent-with-tab="indentWithTab"
+        :tabSize="tabSize"
+        :extensions="extensions"
+        @ready="log('ready', $event)"
+        @change="log('change', $event)"
+        @focus="log('focus', $event)"
+        @blur="useEditedCode"
       />
     </div>
   </div>
@@ -29,40 +39,84 @@
 
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
-import { codemirror } from "vue-codemirror";
-import { ref } from "vue";
+import { Codemirror } from "vue-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { cpp } from "@codemirror/lang-cpp";
+
+import { oneDark } from "@codemirror/theme-one-dark";
+import { reactive, defineComponent, ref, toRefs } from "vue";
 import { FolderOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
-export default {
+export default defineComponent({
   components: {
-    codemirror,
+    Codemirror,
     HeaderNav,
     FolderOutlined,
     DeleteOutlined,
   },
   setup() {
-    let cmOptions = {
-      mode: "text/cpp",
-      theme: "idea",
-      line: true,
-      lineNumbers: true,
-      showCursorWhenSelecting: true,
-      smartIndent: true,
+    let mode = ref("cpp");
+    const code = ref(`console.log('Hello, world!')`);
+    let selectValue = "cpp";
+    let dateTime = "黑夜";
+    const options = reactive({
+      style: { height: "400px" },
+      mode: "text/x-c++src",
+      spellcheck: true,
+      autofocus: true,
       indentWithTab: true,
       tabSize: 2,
-      autofocus: true,
-      matchBrackets: true,
-    };
+      extensions: [cpp(), oneDark], //传递给CodeMirror EditorState。创建({扩展})
+    });
 
-    let code = ref("");
-    let mode = ref("cpp");
+    // 方法
+    // 失去焦点时,使用已编辑的代码
+    function useEditedCode() {
+      console.log("@@@blur@@@code:", code.value);
+      console.log("@@@blur@@@cpp:", cpp);
+    }
+
+    // 改变主题
+    function changeTheme(e) {
+      console.log("options.extensions:", options.extensions);
+      if (e.target.innerHTML === "黑夜") {
+        options.extensions = [];
+        dateTime = e.target.innerHTML = "白天";
+      } else {
+        options.extensions = [oneDark];
+        dateTime = e.target.innerHTML = "黑夜";
+      }
+    }
+    // 改变模式
+    function changeMode(e) {
+      console.log("selectValue:", selectValue);
+      if (selectValue === "cpp") {
+        if (dateTime === "黑夜") options.extensions = [javascript(), oneDark];
+        else options.extensions = [javascript()];
+        selectValue = "javascript";
+        e.target.innerHTML = "javascript";
+        options.mode = "text/x-javascript";
+      } else {
+        if (dateTime === "黑夜") options.extensions = [cpp(), oneDark];
+        else options.extensions = [cpp()];
+        selectValue = "cpp";
+        e.target.innerHTML = "C++";
+        options.mode = "text/x-c++src";
+      }
+    }
     return {
-      cmOptions,
       code,
       mode,
+      selectValue,
+      dateTime,
+      ...toRefs(options),
+      log: console.log,
+      useEditedCode,
+      changeTheme,
+      changeMode,
     };
   },
-};
+});
 </script>
 
 <style scoped>

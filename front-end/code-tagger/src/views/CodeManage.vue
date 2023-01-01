@@ -25,7 +25,7 @@
 
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
 export default {
   components: { HeaderNav },
@@ -66,12 +66,15 @@ export default {
         },
       ],
     });
-
+    let selectedTest = ref("");
     const CodeRowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         selectedTest = selectedRowKeys;
+        console.log(selectedRows);
+        console.log(selectedTest.value);
       },
     };
+
     return {
       scrollY,
       CodePagination,
