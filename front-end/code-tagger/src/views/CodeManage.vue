@@ -26,6 +26,9 @@
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
 import { reactive, ref } from "vue";
+// import { postData } from "@/api/webpost";
+// import path from "@/api/path.js";
+// import { message } from "ant-design-vue";
 
 export default {
   components: { HeaderNav },
@@ -66,6 +69,49 @@ export default {
         },
       ],
     });
+
+    // function getList() {
+    //   let params = {
+    //     user_id: userId,
+    //   };
+    //   let url = path.website.;
+    //   getData(url, params).then((res) => {
+    //     console.log(res);
+    //   });
+    // }
+
+    // 删除一个问题
+    // function deleteOneCorpus(record) {
+    //   let params = {
+    //     docid: docid,
+    //   };
+    //   let url = path.website.deleteCorpus;
+    //   postData(url, params).then((res) => {
+    //     if (res.explain.indexOf("success") !== -1) {
+    //       message.success(res.explain);
+    //       getList();
+    //     } else {
+    //       message.error(res.explain);
+    //     }
+    //   });
+    // }
+
+    // 批量删除问题
+    // function deleteCorpus() {
+    //   let params = {
+    //     docid_list: selectedTest,
+    //   };
+    //   let url = path.website.deleteManyCorpus;
+    //   postData(url, params).then((res) => {
+    //     if (res.explain.indexOf("success") !== -1) {
+    //       message.success(res.explain);
+    //       getList();
+    //     } else {
+    //       message.error(res.explain);
+    //     }
+    //   });
+    // }
+
     let selectedTest = ref("");
     const CodeRowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
