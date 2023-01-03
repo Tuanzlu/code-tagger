@@ -5,4 +5,5 @@ from app import app
 def index(): #试图函数
     return "hello world"
 if __name__ == "__main__":
+    app.config["SECRET_KEY"] = 'TPmi4aLWRbyVq8zu9v82dWYW1'
     app.run()
