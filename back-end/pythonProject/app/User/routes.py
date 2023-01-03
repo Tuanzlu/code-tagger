@@ -1,5 +1,4 @@
 from app.User import User
-from db.user_entity import UserEntity
 from flask import request, session, jsonify, render_template
 from db.user_db import user_DB
 
