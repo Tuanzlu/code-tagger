@@ -19,16 +19,19 @@ class user_DB(DB):
         return self.cursor.fetchall()
 
     def removeUser(self, username, passwd, telphone):
-        self.execute("DELETE FROM users WHERE user='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
+        self.execute("DELETE FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
 
     def GetSameInfo(self, telphone):
         self.cursor.execute("SELECT * FROM users WHERE telphone='{}'".format(telphone))
         return self.cursor.fetchone()
 
-    def GetLoginInfo(self, telphone, passwd):
+    def GetLoginInfo(self, telphone):
         self.cursor.execute("SELECT passwd FROM users WHERE telphone='{}'".format(telphone))
         return self.cursor.fetchone()
 
+    def checkUser(self, username, passwd, telphone):
+        self.cursor.execute("SELECT * FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
+        return self.cursor.fetchone()
 
 if __name__ == "__main__":
     userdb = user_DB()
