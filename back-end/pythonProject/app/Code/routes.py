@@ -45,14 +45,26 @@ def addUserCode():
     return jsonify({"state":'success', "description": "success", "moreMsg":rst})
 
 
-@Code.route('/getCode', methods=["POST", "GET"])
-def getUserCode():
+@Code.route('/getCodes', methods=["POST", "GET"])
+def getUserCodes():
     if request.method == "GET":
         userId = request.args.get("userId")
     else:
         userId = request.form.get("userId")
     print(userId)
     rst = codeDB.selectOneUser(userId)
+    return jsonify({'state':'success', "rst":rst})
+
+
+@Code.route('/getCode', methods=["POST", "GET"])
+def getUserCode():
+    if request.method == "GET":
+        userId = request.args.get("userId")
+        codeId = request.args.get("codeId")
+    else:
+        userId = request.form.get("userId")
+        codeId = request.form.get("codeId")
+    rst = codeDB.selectOneCode(userId,codeId)
     return jsonify({'state':'success', "rst":rst})
 
 
@@ -69,6 +81,7 @@ def removeUserCode():
     codeDB.oneUserRemoveLabel(userId, codeId, code)
     return jsonify({"state":'success', "description": "success"})
 
+
 @Code.route('/modifyCodeID', methods=["POST", "GET"])
 def modifyCodeID():
     if request.method == "GET":
@@ -81,6 +94,7 @@ def modifyCodeID():
         codeID_new = request.args.get("codeId_new")
     codeDB.oneUserModifyCodeID(userId, codeId, codeID_new)
     return jsonify({"state":'success', "description": "success"})
+
 
 @Code.route('/modifyCode', methods=["POST", "GET"])
 def modifyCode():
