@@ -32,33 +32,22 @@ def hello_world():
 
 @User.route('/login', methods=['POST'])
 def login():
-    info = ''
     telphone = request.form.get("telphone")
     password = request.form.get("password")
     res = user.GetLoginInfo(telphone)
     if res == None:
-        info = '无用户信息，请注册'
-        #return render_template('index.html', info=info)
-        return '无用户信息，请注册'
+        return jsonify({"state":'fail', "description": "No user information, please sign up"})
     temp = list(res.values())
     res_p = temp[0]
     if res_p == password:
-        info = '登录成功'
         session['telphone'] = telphone
-        #return render_template('index.html', info=info)
-        return '登录成功'
+        return jsonify({"state":'success', "description": "success"})
     else:
-        info = '登录失败'
-        #return render_template('index.html', info=info)
-        return '登录失败'
-
-
-    return render_template('index.html', info='Unknow Error!!!')
+        return jsonify({"state":'fail', "description": "Wrong password"})
 
 
 @User.route('/register', methods=['POST'])
 def register():
-    info = ''
     username = request.form.get("username")
     telphone = request.form.get("telphone")
     password = request.form.get("password")
@@ -66,46 +55,28 @@ def register():
     res = user.GetSameTelphone(telphone)
     res_username = user.GetSameUsername(username)
     if res:
-        info = '手机号已被使用，请更换手机号重试'
-        #return render_template('index.html', info=info)
-        return '手机号已被使用，请更换手机号重试'
+        return jsonify({"state":'fail', "description": "The telephone number has been used, please change the telephone number and try again"})
     if res_username:
-        info = '用户名已被使用，请更换用户名重试'
-        # return render_template('index.html', info=info)
-        return '用户名已被使用，请更换用户名重试'
+        return jsonify({"state":'fail', "description": "The username has been used, please change the username and try again"})
     if password != password_again:
-        info = '两次密码不一致'
-        #return render_template('index.html', info=info)
-        return '两次密码不一致'
+        return jsonify({"state":'fail', "description": "The two passwords do not match"})
     else:
-        info = '注册成功'
         user.addUser(username, password, telphone)
-        # return jsonify({"state": 'success', "description": "success"})
-        # return render_template('index.html', info=info)
-        return '注册成功'
-
-    return render_template('index.html', info='Unknow Error!!!')
+        return jsonify({"state":'success', "description": "success"})
 
 
 @User.route('/exit', methods=['GET'])
 def exit():
-    info = ''
     res = session.get('telphone')
     if res == None:
-        info = '未登录'
-        #return render_template('index.html', info=info)
-        return '未登录'
+        return jsonify({"state":'fail', "description": "Not logged in"})
     else:
         session['telphone'] = None
-        info = '账号已成功注销'
-        #return render_template('index.html', info=info)
-        return '账号已成功注销'
+        return jsonify({"state":'success', "description": "success"})
 
-    return render_template('index.html', info='Unknow Error!!!')
 
 @User.route('/removeUser', methods=["POST", "GET"])
 def removeUser():
-    info = ''
     if request.method == "GET":
         username = request.args.get("username")
         telphone = request.args.get("telphone")
@@ -116,14 +87,7 @@ def removeUser():
         password = request.form.get("password")
     res = user.checkUser(username, password, telphone)
     if res == None:
-        info = '输入信息有误，删除失败'
-        #return render_template('index.html', info=info)
-        return '输入信息有误，删除失败'
+        return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
-        info = '删除成功'
         user.removeUser(username, password, telphone)
-        # return render_template('index.html', info=info)
-        # return jsonify({"state":'success', "description": "success"})
-        return '删除成功'
-
-    return render_template('index.html', info='Unknow Error!!!')
+        return jsonify({"state":'success', "description": "success"})
