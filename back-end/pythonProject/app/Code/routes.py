@@ -2,9 +2,11 @@ from app.Code import Code
 
 from flask import request, session, jsonify
 from db.code_db import code_DB
+from db.mark_db import mark_DB
 
 
 codeDB = code_DB()
+markDB = mark_DB()
 
 
 # 两个函数，用于将flask_sql的输出转化为可以直接网络传输的json格式
@@ -85,13 +87,18 @@ def modifyCodeID():
     if request.method == "GET":
         userId = request.args.get("userId")
         codeId = request.args.get("codeId")
-        codeID_new = request.args.get("codeId_new")
+        codeId_new = request.args.get("codeId_new")
     else:
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
-        codeID_new = request.args.get("codeId_new")
-    codeDB.oneUserModifyCodeID(userId, codeId, codeID_new)
-    return jsonify({"state":'success', "description": "success"})
+        codeId_new = request.args.get("codeId_new")
+    rst = codeDB.checkUserCode(userId, codeId_new)
+    if rst == "existed":
+        return jsonify({"state":'fail', "description": "Existing label"})
+    else:
+        codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
+        markDB.oneUserModifyCodeID(userId, codeId, codeId_new)
+        return jsonify({"state":'success', "description": "success"})
 
 
 @Code.route('/modifyCode', methods=["POST", "GET"])
