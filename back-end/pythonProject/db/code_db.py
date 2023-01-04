@@ -47,6 +47,11 @@ class code_DB(DB):
         self.execute("UPDATE Code SET code='{}' WHERE userID='{}' AND code_name='{}'".format(c_new, userID, c_name))
         return self.cursor.lastrowid
 
+    def selectOneCode(self, userID,c_name):
+        self.cursor.execute("SELECT userID, code, code_name FROM Code WHERE userID = '{}' AND code_name='{}'".format(userID,c_name))
+        outs = self.cursor.fetchall()
+        return outs
+
 if __name__ == "__main__":
     code1 = code_DB()
     print("first print...")
