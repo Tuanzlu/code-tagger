@@ -1,6 +1,6 @@
 # 调用自定义包: db, 具体路径在run.py同目录下的文件夹中, 操作数据库
 # print(__main__)
-from sqlite3_db import DB
+from db.sqlite3_db import DB
 # from db.sqlite3_db import DB
 
 class code_DB(DB):
