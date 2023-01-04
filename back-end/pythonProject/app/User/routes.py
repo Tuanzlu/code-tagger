@@ -63,12 +63,17 @@ def register():
     telphone = request.form.get("telphone")
     password = request.form.get("password")
     password_again = request.form.get("password_again")
-    res = user.GetSameInfo(telphone)
+    res = user.GetSameTelphone(telphone)
+    res_username = user.GetSameUsername(username)
     if res:
         info = '手机号已被使用，请更换手机号重试'
         #return render_template('index.html', info=info)
         return '手机号已被使用，请更换手机号重试'
-    elif password != password_again:
+    if res_username:
+        info = '用户名已被使用，请更换用户名重试'
+        # return render_template('index.html', info=info)
+        return '用户名已被使用，请更换用户名重试'
+    if password != password_again:
         info = '两次密码不一致'
         #return render_template('index.html', info=info)
         return '两次密码不一致'
