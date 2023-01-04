@@ -98,7 +98,7 @@ def modifyCodeID():
         codeId_new = request.args.get("codeId_new")
     rst = codeDB.checkUserCode(userId, codeId_new)
     if rst == "existed":
-        return jsonify({"state":'fail', "description": "Existing label"})
+        return jsonify({"state":'fail', "description": "Existing Code Name"})
     else:
         codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
         markDB.oneUserModifyCodeID(userId, codeId, codeId_new)
