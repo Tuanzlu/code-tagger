@@ -21,7 +21,7 @@ class user_DB(DB):
     def removeUser(self, username, passwd, telphone):
         self.execute("DELETE FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
 
-    def GetSameInfo(self, telphone):
+    def GetSameTelphone(self, telphone):
         self.cursor.execute("SELECT * FROM users WHERE telphone='{}'".format(telphone))
         return self.cursor.fetchone()
 
@@ -31,6 +31,10 @@ class user_DB(DB):
 
     def checkUser(self, username, passwd, telphone):
         self.cursor.execute("SELECT * FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
+        return self.cursor.fetchone()
+
+    def GetSameUsername(self, username):
+        self.cursor.execute("SELECT * FROM users WHERE username='{}'".format(username))
         return self.cursor.fetchone()
 
 if __name__ == "__main__":
