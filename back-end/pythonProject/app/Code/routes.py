@@ -73,12 +73,10 @@ def removeUserCode():
     if request.method == "GET":
         userId = request.args.get("userId")
         codeId = request.args.get("codeId")
-        code = request.args.get("code")
     else:
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
-        code = request.args.get("code")
-    codeDB.oneUserRemoveLabel(userId, codeId, code)
+    rst = codeDB.oneUserRemoveCode(userId, codeId)
     return jsonify({"state":'success', "description": "success"})
 
 
