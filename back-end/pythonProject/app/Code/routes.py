@@ -43,8 +43,12 @@ def addUserCode():
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
         code = request.args.get("code")
-    rst = codeDB.oneUserAddCode(userId, codeId, code)
-    return jsonify({"state":'success', "description": "success", "moreMsg":rst})
+    rst = codeDB.checkUserCode(userId, codeId)
+    if rst == "existed":
+        return jsonify({"state": 'fail', "description": "Existing Code Name"})
+    else:
+        rst = codeDB.oneUserAddCode(userId, codeId, code)
+        return jsonify({"state":'success', "description": "success", "moreMsg":rst})
 
 
 @Code.route('/getCodes', methods=["POST", "GET"])
