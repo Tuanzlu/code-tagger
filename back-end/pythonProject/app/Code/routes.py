@@ -92,5 +92,5 @@ def modifyCode():
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
         code_new = request.args.get("code_new")
-    codeDB.oneUserModifyLabelintro(userId, codeId, code_new)
+    codeDB.oneUserModifyCode(userId, codeId, code_new)
     return jsonify({"state":'success', "description": "success"})
