@@ -31,17 +31,17 @@ def hello_world():
     return "hello to AddCodeFile!"
 
 
-@Code.route('/addCode', methods=['POST'])
+@Code.route('/addCode', methods=['POST', "GET"])
 def addUserCode():
     if request.method == "GET":
         userId = request.args.get("userId")
-        codeName = request.args.get("codeId")
+        codeId = request.args.get("codeId")
         code = request.args.get("code")
     else:
         userId = request.form.get("userId")
-        codeName = request.form.get("codeId")
+        codeId = request.form.get("codeId")
         code = request.args.get("code")
-    rst = codeDB.oneUserAddCode(userId, codeName, code)
+    rst = codeDB.oneUserAddCode(userId, codeId, code)
     return jsonify({"state":'success', "description": "success", "moreMsg":rst})
 
 
@@ -60,12 +60,37 @@ def getUserCode():
 def removeUserCode():
     if request.method == "GET":
         userId = request.args.get("userId")
-        codeName = request.args.get("codeId")
+        codeId = request.args.get("codeId")
         code = request.args.get("code")
     else:
         userId = request.form.get("userId")
-        codeName = request.form.get("codeId")
+        codeId = request.form.get("codeId")
         code = request.args.get("code")
-    codeDB.oneUserRemoveLabel(userId, codeName, code)
+    codeDB.oneUserRemoveLabel(userId, codeId, code)
     return jsonify({"state":'success', "description": "success"})
 
+@Code.route('/modifyCodeID', methods=["POST", "GET"])
+def modifyCodeID():
+    if request.method == "GET":
+        userId = request.args.get("userId")
+        codeId = request.args.get("codeId")
+        codeID_new = request.args.get("codeId_new")
+    else:
+        userId = request.form.get("userId")
+        codeId = request.form.get("codeId")
+        codeID_new = request.args.get("codeId_new")
+    codeDB.oneUserModifyCodeID(userId, codeId, codeID_new)
+    return jsonify({"state":'success', "description": "success"})
+
+@Code.route('/modifyCode', methods=["POST", "GET"])
+def modifyCode():
+    if request.method == "GET":
+        userId = request.args.get("userId")
+        codeId = request.args.get("codeId")
+        code_new = request.args.get("code_new")
+    else:
+        userId = request.form.get("userId")
+        codeId = request.form.get("codeId")
+        code_new = request.args.get("code_new")
+    codeDB.oneUserModifyLabelintro(userId, codeId, code_new)
+    return jsonify({"state":'success', "description": "success"})
