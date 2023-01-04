@@ -20,8 +20,8 @@ class code_DB(DB):
         self.cursor.execute("SELECT * FROM Code WHERE userID='{}' AND code_name='{}'".format(userID,c_name))
         return self.cursor.fetchall()
 
-    def oneUserRemoveCode(self, userID, c, c_name):
-        self.execute("DELETE FROM Code WHERE userID='{}' AND code='{}' AND code_name='{}'".format(userID,c,c_name))
+    def oneUserRemoveCode(self, userID, c_name):
+        self.execute("DELETE FROM Code WHERE userID='{}' AND code_name='{}'".format(userID,c_name))
 
     def oneUserAddCode(self, userID, c, c_name):
         check_rst = self.checkUserCode(userID, c_name)
