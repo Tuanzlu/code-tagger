@@ -16,15 +16,15 @@ class code_DB(DB):
         outs = self.cursor.fetchall()
         return outs
 
-    def checkUserCode(self, userID, c, c_name):
-        self.cursor.execute("SELECT * FROM Code WHERE userID='{}' AND code='{}' AND code_name='{}'".format(userID,c,c_name))
+    def checkUserCode(self, userID, c_name):
+        self.cursor.execute("SELECT * FROM Code WHERE userID='{}' AND code_name='{}'".format(userID,c_name))
         return self.cursor.fetchall()
 
     def oneUserRemoveCode(self, userID, c, c_name):
         self.execute("DELETE FROM Code WHERE userID='{}' AND code='{}' AND code_name='{}'".format(userID,c,c_name))
 
     def oneUserAddCode(self, userID, c, c_name):
-        check_rst = self.checkUserCode(userID, c, c_name)
+        check_rst = self.checkUserCode(userID, c_name)
         if not check_rst:
             self.execute("INSERT INTO Code (userID,code,code_name) VALUES (?,?,?)",(userID, c, c_name))
             return self.cursor.lastrowid
@@ -35,6 +35,18 @@ class code_DB(DB):
         self.cursor.execute("SELECT * FROM Code")
         return self.cursor.fetchall()
 
+    def oneUserModifyCodeID(self, userID, c_name, c_name_new):
+        check_rst = self.checkUserCode(userID, c_name)
+        if not check_rst:
+            self.execute("UPDATE Code SET code_name='{}' WHERE userID='{}' AND code_name='{}'".format(c_name_new, userID, c_name))
+            return self.cursor.lastrowid
+        else:
+            return "existed"
+
+    def oneUserModifyCode(self, userID, c_name, c_new):
+        self.execute("UPDATE Code SET code='{}' WHERE userID='{}' AND code_name='{}'".format(c_new, userID, c_name))
+        return self.cursor.lastrowid
+
 if __name__ == "__main__":
     code1 = code_DB()
     print("first print...")
@@ -43,9 +55,11 @@ if __name__ == "__main__":
     print("second print...")
     print(code1.selectAll())
     print("third print...")
-    print(code1.checkUserCode("admin",'www.baidu.com',"baidu"))
+    print(code1.checkUserCode("admin", "baidu"))
+    #print(code1.checkUserCode("admin",'www.baidu.com',"baidu"))
     print("4th print...")
-    print(code1.checkUserCode("admin",'www.360.com',"baidu"))
+    print(code1.checkUserCode("admin", "baidu"))
+    #print(code1.checkUserCode("admin",'www.360.com',"baidu"))
     print(code1.selectOneUser("admin"))
     
     
