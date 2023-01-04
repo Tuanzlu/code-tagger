@@ -40,7 +40,7 @@ class mark_DB(DB):
         self.execute("UPDATE Mark SET labelID='{}' WHERE userID='{}' AND labelID='{}'" .format(l_new, userID, l_name))
         return self.cursor.lastrowid
     
-    def oneUserModifycodeID(self, userID, c_name, c_new):
+    def oneUserModifyCodeID(self, userID, c_name, c_new):
         self.execute("UPDATE Mark SET codeID='{}' WHERE userID='{}' AND codeID='{}'" .format(c_new, userID, c_name))
         return self.cursor.lastrowid
 
