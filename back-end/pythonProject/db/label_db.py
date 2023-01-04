@@ -7,12 +7,17 @@ class label_DB(DB):
     def __init__(self, db_path = 'data/code.sqlite'):
         self.db_path = db_path
         self.init_table_sql = '''
-        CREATE TABLE IF NOT EXISTS "Label" ("_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "userID" VARCHAR, "label_name" VARCHAR);
+        CREATE TABLE IF NOT EXISTS "Label" ("_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "userID" VARCHAR, "label_name" VARCHAR, "label_intro" VARCHAR);
         '''
         super(label_DB, self).__init__(self.db_path, self.init_table_sql)
     
-    def selectOneUser(self, userID):
-        self.cursor.execute("SELECT userID, label_name FROM Label WHERE userID = '{}'".format(userID))
+    def selectOneUserdetail(self, userID):
+        self.cursor.execute("SELECT userID, label_name, label_intro FROM Label WHERE userID = '{}'".format(userID))
+        outs = self.cursor.fetchall()
+        return outs
+    
+    def selectOneUserlist(self, userID):
+        self.cursor.execute("SELECT label_name FROM Label WHERE userID = '{}'".format(userID))
         outs = self.cursor.fetchall()
         return outs
 
@@ -23,13 +28,21 @@ class label_DB(DB):
     def oneUserRemoveLabel(self, userID, l_name):
         self.execute("DELETE FROM Label WHERE userID='{}' AND label_name='{}'".format(userID,l_name))
 
-    def oneUserAddLabel(self, userID, l_name):
+    def oneUserAddLabel(self, userID, l_name, l_intro):
         check_rst = self.checkUserLabel(userID, l_name)
         if not check_rst:
-            self.execute("INSERT INTO Label (userID,label_name) VALUES (?,?)",(userID, l_name))
+            self.execute("INSERT INTO Label (userID,label_name,label_intro) VALUES (?,?,?)",(userID, l_name, l_intro))
             return self.cursor.lastrowid
         else:
             return "existed"
+    
+    def oneUserModifyLabelID(self, userID, l_name, l_new):
+        self.execute("UPDATE Label SET label_name='{}' WHERE userID='{}' AND label_name='{}'" .format(l_new, userID, l_name))
+        return self.cursor.lastrowid
+    
+    def oneUserModifyLabelintro(self, userID, l_name, l_new):
+        self.execute("UPDATE Label SET label_intro='{}' WHERE userID='{}' AND label_name='{}'" .format(l_new, userID, l_name))
+        return self.cursor.lastrowid
 
     def selectAll(self):
         self.cursor.execute("SELECT * FROM Label")
