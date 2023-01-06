@@ -33,8 +33,8 @@ const routes = [
   },
   {
     // 代码库+标签库目录
-    path: "/index",
-    name: "index",
+    path: "/personalIndex",
+    name: "personalIndex",
     component: () => import("../views/PersonalIndex.vue"),
   },
   {

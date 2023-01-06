@@ -4,4 +4,5 @@ import App from "./App";
 import "ant-design-vue/dist/antd.css";
 import router from "./router";
 import { Codemirror } from "vue-codemirror";
-createApp(App).use(router).use(Antd).use(Codemirror).mount("#app");
+const app = createApp(App);
+app.use(router).use(Antd).use(Codemirror).mount("#app");

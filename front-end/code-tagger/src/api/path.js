@@ -1,4 +1,4 @@
-let Ip = "http://127.0.0.1:5000/";
+let Ip = "/api/";
 
 let path = {
   website: {
