@@ -2,7 +2,10 @@
   <header-nav current="code"></header-nav>
 
   <div class="container">
-    <div class="up_bar"></div>
+    <div class="up_bar">
+      <a-button @click="addCode">新增代码文件</a-button>
+      <a-button @click="deleteCode">删除代码文件</a-button>
+    </div>
     <div class="main">
       <div class="table-area">
         <div class="code-table">
@@ -26,9 +29,10 @@
 <script>
 import HeaderNav from "@/components/HeaderNav.vue";
 import { reactive, ref } from "vue";
-// import { postData } from "@/api/webpost";
-// import path from "@/api/path.js";
-// import { message } from "ant-design-vue";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import path from "@/api/path.js";
+import { message } from "ant-design-vue";
 
 export default {
   components: { HeaderNav },
@@ -70,15 +74,19 @@ export default {
       ],
     });
 
-    // function getList() {
-    //   let params = {
-    //     user_id: userId,
-    //   };
-    //   let url = path.website.;
-    //   getData(url, params).then((res) => {
-    //     console.log(res);
-    //   });
-    // }
+    // const userId = window.localStorage.getItem("userId");
+    let userId = "1";
+    getCodeList();
+
+    function getCodeList() {
+      let params = {
+        userId: userId,
+      };
+      let url = path.website.getCodeList;
+      getData(url, params).then((res) => {
+        console.log(res);
+      });
+    }
 
     // 删除一个问题
     // function deleteOneCorpus(record) {
@@ -140,6 +148,7 @@ export default {
 .up_bar {
   /* border: 1px solid red; */
   height: 20px;
+  margin: 20px;
 }
 .main {
   margin: auto;
