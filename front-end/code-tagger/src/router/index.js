@@ -8,52 +8,52 @@ const routes = [
     component: () => import("../views/Index.vue"),
   },
   {
-    // 用户登录 未启用
-    path: "/login",
-    name: "login",
-    component: () => import("../views/Login.vue"),
-  },
-  {
     // 平台使用说明
     path: "/intro",
     name: "intro",
     component: () => import("../views/Intro.vue"),
   },
   {
-    // 平台使用说明
-    path: "/editor",
-    name: "editor",
-    component: () => import("../views/Editor.vue"),
+    // 登录
+    path: "/login",
+    name: "login",
+    component: () => import("../views/Login.vue"),
   },
   {
-    // 平台使用说明
-    path: "/person",
-    name: "person",
-    component: () => import("../views/PersonalIndex.vue"),
-  },
-  {
-    // 平台使用说明
+    // 注册
     path: "/register",
     name: "register",
     component: () => import("../views/Register.vue"),
   },
   {
-    // 平台使用说明
-    path: "/relation",
-    name: "relation",
-    component: () => import("../views/RelationManage.vue"),
+    // 在线代码编辑器
+    path: "/editor",
+    name: "editor",
+    component: () => import("../views/Editor.vue"),
   },
   {
-    // 平台使用说明
+    // 代码库+标签库目录
+    path: "/index",
+    name: "index",
+    component: () => import("../views/PersonalIndex.vue"),
+  },
+  {
+    // 代码库
+    path: "/code",
+    name: "code",
+    component: () => import("../views/CodeManage.vue"),
+  },
+  {
+    // 标签库
     path: "/tag",
     name: "tag",
     component: () => import("../views/TagManage.vue"),
   },
   {
-    // 平台使用说明
-    path: "/code",
-    name: "code",
-    component: () => import("../views/CodeManage.vue"),
+    // 标注关系库
+    path: "/relation",
+    name: "relation",
+    component: () => import("../views/RelationManage.vue"),
   },
 ];
 
