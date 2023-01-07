@@ -36,11 +36,11 @@ def hello_world():
 @Code.route('/addCode', methods=['POST', "GET"])
 def addUserCode():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         codeId = request.args.get("codeId")
         code = request.args.get("code")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
         code = request.args.get("code")
     rst = codeDB.oneUserAddCode(userId, codeId, code)
@@ -64,10 +64,10 @@ def getUserCodes():
 @Code.route('/getCode', methods=["POST", "GET"])
 def getUserCode():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         codeId = request.args.get("codeId")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
     rst = codeDB.selectOneCode(userId,codeId)
     return jsonify({'state':'success', "rst":rst})
@@ -76,10 +76,10 @@ def getUserCode():
 @Code.route('/removeCode', methods=["POST", "GET"])
 def removeUserCode():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         codeId = request.args.get("codeId")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
     rst = codeDB.oneUserRemoveCode(userId, codeId)
     return jsonify({"state":'success', "description": "success"})
@@ -88,11 +88,11 @@ def removeUserCode():
 @Code.route('/modifyCodeID', methods=["POST", "GET"])
 def modifyCodeID():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         codeId = request.args.get("codeId")
         codeId_new = request.args.get("codeId_new")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
         codeId_new = request.args.get("codeId_new")
     rst = codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
@@ -106,11 +106,11 @@ def modifyCodeID():
 @Code.route('/modifyCode', methods=["POST", "GET"])
 def modifyCode():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         codeId = request.args.get("codeId")
         code_new = request.args.get("code_new")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
         code_new = request.args.get("code_new")
     codeDB.oneUserModifyCode(userId, codeId, code_new)
