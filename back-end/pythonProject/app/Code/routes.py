@@ -43,20 +43,19 @@ def addUserCode():
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
         code = request.args.get("code")
-    rst = codeDB.checkUserCode(userId, codeId)
+    rst = codeDB.oneUserAddCode(userId, codeId, code)
     if rst == "existed":
-        return jsonify({"state": 'fail', "description": "Existing Code Name"})
+        return jsonify({"state": 'fail', "description": "Existing Code Name", "moreMsg":rst})
     else:
-        rst = codeDB.oneUserAddCode(userId, codeId, code)
         return jsonify({"state":'success', "description": "success", "moreMsg":rst})
 
 
 @Code.route('/getCodes', methods=["POST", "GET"])
 def getUserCodes():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
     print(userId)
     rst = codeDB.selectOneUser(userId)
     return jsonify({'state':'success', "rst":rst})
@@ -96,11 +95,10 @@ def modifyCodeID():
         userId = request.form.get("userId")
         codeId = request.form.get("codeId")
         codeId_new = request.args.get("codeId_new")
-    rst = codeDB.checkUserCode(userId, codeId_new)
+    rst = codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
     if rst == "existed":
         return jsonify({"state":'fail', "description": "Existing Code Name"})
     else:
-        codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
         markDB.oneUserModifyCodeID(userId, codeId, codeId_new)
         return jsonify({"state":'success', "description": "success"})
 
