@@ -29,11 +29,11 @@ def hello_world():
 @UserLabel.route('/addLabel', methods=["POST", "GET"])
 def addUserLabel_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         labelId = request.args.get("labelId")
         label = request.args.get("label")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         labelId = request.form.get("labelId")
         label = request.form.get("label")
     label1 = label_DB()
@@ -46,10 +46,10 @@ def addUserLabel_func():
 @UserLabel.route('/getLabel', methods=["POST", "GET"])
 def getLabel_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         labelId = request.args.get("labelId")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         labelId = request.form.get("labelId")
     print(userId)
     label1 = label_DB()
@@ -59,10 +59,10 @@ def getLabel_func():
 @UserLabel.route('/getUser', methods=["POST", "GET"])
 def getUserUser_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         detail = request.args.get("detail")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         detail = request.form.get("detail")
     label1 = label_DB()
     if detail == False:
@@ -75,10 +75,10 @@ def getUserUser_func():
 @UserLabel.route('/removeLabel', methods=["POST", "GET"])
 def removeUserLabel_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         labelId = request.args.get("labelId")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         labelId = request.form.get("labelId")
     label1 = label_DB()
     label1.oneUserRemoveLabel(userId, labelId)
@@ -87,11 +87,11 @@ def removeUserLabel_func():
 @UserLabel.route('/modifyLabelID', methods=["POST", "GET"])
 def modifyLabelID_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         labelId = request.args.get("labelId")
         labelId_new = request.args.get("labelId_new")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         labelId = request.form.get("labelId")
         labelId_new = request.form.get("labelId_new")
     label1 = label_DB()
@@ -107,11 +107,11 @@ def modifyLabelID_func():
 @UserLabel.route('/modifyLabelintro', methods=["POST", "GET"])
 def modifyLabelintro_func():
     if request.method == "GET":
-        userId = request.args.get("userId")
+        userId = str(request.args.get("userId"))
         labelId = request.args.get("labelId")
         label_new = request.args.get("label_new")
     else:
-        userId = request.form.get("userId")
+        userId = str(request.form.get("userId"))
         labelId = request.form.get("labelId")
         label_new = request.form.get("label_new")
     label1 = label_DB()
