@@ -56,7 +56,6 @@ def getUserCodes():
         userId = str(request.args.get("userId"))
     else:
         userId = str(request.form.get("userId"))
-    print(userId)
     rst = codeDB.selectOneUser(userId)
     return jsonify({'state':'success', "rst":rst})
 
@@ -94,7 +93,7 @@ def modifyCodeID():
     else:
         userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
-        codeId_new = request.args.get("codeId_new")
+        codeId_new = request.form.get("codeId_new")
     rst = codeDB.oneUserModifyCodeID(userId, codeId, codeId_new)
     if rst == "existed":
         return jsonify({"state":'fail', "description": "Existing Code Name"})
@@ -112,6 +111,6 @@ def modifyCode():
     else:
         userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
-        code_new = request.args.get("code_new")
+        code_new = request.form.get("code_new")
     codeDB.oneUserModifyCode(userId, codeId, code_new)
     return jsonify({"state":'success', "description": "success"})
