@@ -28,6 +28,7 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
+    // userRoute route
     let logoUrl = require("@/assets/logo.png");
     let curPage = [props.current];
     function changePage(item) {
@@ -39,7 +40,7 @@ export default defineComponent({
     function toIndex() {
       // 待补充登录逻辑判断
       router.push({
-        path: "/person",
+        name: "index",
       });
     }
     return {

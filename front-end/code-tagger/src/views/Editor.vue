@@ -3,16 +3,16 @@
   <div class="container">
     <div class="main">
       <div class="btn-bar">
-        <a-button class="btn">
+        <a-button class="btn" @click="modifyCode">
           <template #icon><folder-outlined /></template>
           保存
         </a-button>
-        <a-button class="btn">
+        <a-button class="btn" @click="deleteCode">
           <template #icon><delete-outlined /></template>
           删除
         </a-button>
-        <button @click="changeTheme($event)">黑夜</button>
-        <button @click="changeMode($event)">C++</button>
+        <!-- <a-button @click="changeTheme($event)">黑夜</a-button> -->
+        <a-button @click="changeMode($event)">C++</a-button>
         <a-select v-model:value="mode" style="width: 100px">
           <a-select-option value="cpp">C++</a-select-option>
           <a-select-option value="asm">asm</a-select-option>
@@ -42,8 +42,11 @@ import HeaderNav from "@/components/HeaderNav.vue";
 import { Codemirror } from "vue-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { cpp } from "@codemirror/lang-cpp";
-
-import { oneDark } from "@codemirror/theme-one-dark";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import path from "@/api/path.js";
+import { useRouter, useRoute } from "vue-router";
+// import { oneDark } from "@codemirror/theme-one-dark";
 import { reactive, defineComponent, ref, toRefs } from "vue";
 import { FolderOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
@@ -55,10 +58,11 @@ export default defineComponent({
     DeleteOutlined,
   },
   setup() {
+    const router = useRouter();
+    const route = useRoute();
     let mode = ref("cpp");
-    const code = ref(`console.log('Hello, world!')`);
+    const code = ref("");
     let selectValue = "cpp";
-    let dateTime = "黑夜";
     const options = reactive({
       style: { height: "400px" },
       mode: "text/x-c++src",
@@ -66,8 +70,39 @@ export default defineComponent({
       autofocus: true,
       indentWithTab: true,
       tabSize: 2,
-      extensions: [cpp(), oneDark], //传递给CodeMirror EditorState。创建({扩展})
+      extensions: [cpp()], //传递给CodeMirror EditorState。创建({扩展})
     });
+    let userId = "lqy";
+    let codeId = route.query.codeId;
+
+    getCode();
+
+    function getCode() {
+      let params = {
+        userId: userId,
+        codeId: codeId,
+      };
+      let url = path.website.getCode;
+      getData(url, params).then((res) => {
+        console.log(res);
+        code.value = res.rst[0].code;
+      });
+    }
+
+    function modifyCode() {
+      let params = new URLSearchParams();
+      params.append("userId", userId);
+      params.append("codeId", codeId);
+      params.append("code_new", code.value);
+      let url = path.website.modifyCode;
+      postData(url, params).then((res) => {
+        console.log(res);
+      });
+    }
+
+    function deleteCode() {
+      console.log("delete code");
+    }
 
     // 方法
     // 失去焦点时,使用已编辑的代码
@@ -76,29 +111,16 @@ export default defineComponent({
       console.log("@@@blur@@@cpp:", cpp);
     }
 
-    // 改变主题
-    function changeTheme(e) {
-      console.log("options.extensions:", options.extensions);
-      if (e.target.innerHTML === "黑夜") {
-        options.extensions = [];
-        dateTime = e.target.innerHTML = "白天";
-      } else {
-        options.extensions = [oneDark];
-        dateTime = e.target.innerHTML = "黑夜";
-      }
-    }
     // 改变模式
     function changeMode(e) {
       console.log("selectValue:", selectValue);
       if (selectValue === "cpp") {
-        if (dateTime === "黑夜") options.extensions = [javascript(), oneDark];
-        else options.extensions = [javascript()];
+        options.extensions = [javascript()];
         selectValue = "javascript";
         e.target.innerHTML = "javascript";
         options.mode = "text/x-javascript";
       } else {
-        if (dateTime === "黑夜") options.extensions = [cpp(), oneDark];
-        else options.extensions = [cpp()];
+        options.extensions = [cpp()];
         selectValue = "cpp";
         e.target.innerHTML = "C++";
         options.mode = "text/x-c++src";
@@ -108,12 +130,12 @@ export default defineComponent({
       code,
       mode,
       selectValue,
-      dateTime,
       ...toRefs(options),
       log: console.log,
       useEditedCode,
-      changeTheme,
       changeMode,
+      modifyCode,
+      deleteCode,
     };
   },
 });

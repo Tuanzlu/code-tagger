@@ -7,6 +7,7 @@ let path = {
     login: Ip + "User/login",
     exit: Ip + "User/exit",
     removeUser: Ip + "User/removeUser",
+    // getUser:
 
     //Code
     getCodeList: Ip + "Code/getCodes",

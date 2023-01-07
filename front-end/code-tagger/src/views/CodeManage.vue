@@ -3,8 +3,16 @@
 
   <div class="container">
     <div class="up_bar">
-      <a-button @click="addCode">新增代码文件</a-button>
-      <a-button @click="deleteCode">删除代码文件</a-button>
+      <a-button @click="showModal">新增代码文件</a-button>
+      <a-modal v-model:visible="visible" @ok="addCode">
+        <div style="margin: 20px">
+          <label>代码名称：</label><a-input style="width: 200px" v-model:value="codeName" />
+        </div>
+        <template #footer>
+          <a-button key="back" @click="handleCancel">取消</a-button>
+          <a-button key="submit" type="primary" @click="addCode">确认</a-button>
+        </template>
+      </a-modal>
     </div>
     <div class="main">
       <div class="table-area">
@@ -12,13 +20,50 @@
           <a-table
             class="table"
             bordered
-            :row-selection="CodeRowSelection"
-            :row-key="(record) => record.id"
-            :data-source="CodeDataSource.dataSource"
+            :row-key="(record) => record.code_name"
+            :data-source="CodeDataSource"
             :columns="CodeColumns"
             :scroll="scrollY"
           >
             <template #title>代码库</template>
+            <template #bodyCell="{ column, record, text }">
+              <template v-if="['code_name'].includes(column.dataIndex)">
+                <div>
+                  <a-input
+                    v-if="editableData[record.code_name]"
+                    v-model:value="editableData[record.code_name][column.dataIndex]"
+                    style="margin: -5px 0"
+                  />
+                  <template v-else>
+                    {{ text }}
+                  </template>
+                </div>
+              </template>
+              <template v-if="column.key === 'action'">
+                <div class="editable-row-operations">
+                  <span v-if="editableData[record.code_name]">
+                    <a-typography-link style="margin: 0 5px" @click="save(record.code_name)">保存</a-typography-link>
+                    <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.code_name)">
+                      <a>取消</a>
+                    </a-popconfirm>
+                  </span>
+                  <span v-else>
+                    <a @click="edit(record.code_name)">编辑</a>
+                    <a-popconfirm
+                      title="是否确定删除？"
+                      ok-text="Yes"
+                      cancel-text="No"
+                      @confirm="deleteOneCode(record)"
+                    >
+                      <a style="margin: 0 0 0 5px">删除</a>
+                    </a-popconfirm>
+                    <a style="margin: 0 5px" @click="lookAtCode(record)">查看</a>
+                  </span>
+                </div>
+
+                <!-- <a style="margin: 0 5px 0 0" @click="showModal(record.code_name)">编辑</a> -->
+              </template>
+            </template>
           </a-table>
         </div>
       </div>
@@ -33,10 +78,13 @@ import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import path from "@/api/path.js";
 import { message } from "ant-design-vue";
+import { cloneDeep } from "lodash-es";
+import { useRouter } from "vue-router";
 
 export default {
   components: { HeaderNav },
   setup() {
+    const router = useRouter();
     let scrollY = reactive({ y: document.body.offsetHeight - 265 });
     const CodePagination = reactive({
       total: 100,
@@ -48,8 +96,8 @@ export default {
     const CodeColumns = [
       {
         title: "代码文件名",
-        key: "file_name",
-        dataIndex: "file_name",
+        key: "codeId",
+        dataIndex: "code_name",
         // width: "15%",
       },
       {
@@ -58,25 +106,42 @@ export default {
         dataIndex: "update_time",
         // width: "20%",
       },
+      {
+        title: "操作",
+        dataIndex: "action",
+        key: "action",
+      },
     ];
-    const CodeDataSource = reactive({
-      dataSource: [
-        {
-          id: "1",
-          file_name: "test",
-          update_time: "2022/11/8",
-        },
-        {
-          id: "2",
-          file_name: "test",
-          update_time: "2022/11/8",
-        },
-      ],
-    });
+    const CodeDataSource = ref([]);
 
     // const userId = window.localStorage.getItem("userId");
-    let userId = "1";
+    let userId = "lqy";
+    let modifyName = ref("");
+    let codeName = ref("");
+    let modifyingName = ref("");
     getCodeList();
+    const visible = ref(false);
+    const showModal = () => {
+      visible.value = true;
+    };
+
+    const editableData = reactive({});
+    const edit = (key) => {
+      editableData[key] = cloneDeep(CodeDataSource.value.filter((item) => key === item.code_name)[0]);
+      modifyingName.value = key;
+    };
+    const save = (key) => {
+      Object.assign(CodeDataSource.value.filter((item) => key === item.code_name)[0], editableData[key]);
+      console.log(editableData[key]);
+      let item = JSON.parse(JSON.stringify(editableData[key]));
+      console.log(item);
+      modifyCodeId(item.code_name);
+      delete editableData[key];
+    };
+
+    const cancel = (key) => {
+      delete editableData[key];
+    };
 
     function getCodeList() {
       let params = {
@@ -85,57 +150,89 @@ export default {
       let url = path.website.getCodeList;
       getData(url, params).then((res) => {
         console.log(res);
+        CodeDataSource.value = res.rst;
       });
     }
 
-    // 删除一个问题
-    // function deleteOneCorpus(record) {
-    //   let params = {
-    //     docid: docid,
-    //   };
-    //   let url = path.website.deleteCorpus;
-    //   postData(url, params).then((res) => {
-    //     if (res.explain.indexOf("success") !== -1) {
-    //       message.success(res.explain);
-    //       getList();
-    //     } else {
-    //       message.error(res.explain);
-    //     }
-    //   });
-    // }
-
-    // 批量删除问题
-    // function deleteCorpus() {
-    //   let params = {
-    //     docid_list: selectedTest,
-    //   };
-    //   let url = path.website.deleteManyCorpus;
-    //   postData(url, params).then((res) => {
-    //     if (res.explain.indexOf("success") !== -1) {
-    //       message.success(res.explain);
-    //       getList();
-    //     } else {
-    //       message.error(res.explain);
-    //     }
-    //   });
-    // }
-
-    let selectedTest = ref("");
-    const CodeRowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        selectedTest = selectedRowKeys;
-        console.log(selectedRows);
-        console.log(selectedTest.value);
-      },
+    const handleCancel = () => {
+      visible.value = false;
     };
+
+    function addCode() {
+      let params = new URLSearchParams();
+      params.append("userId", userId);
+      params.append("codeId", codeName.value);
+      let url = path.website.addCode;
+      postData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          visible.value = false;
+          getCodeList();
+          message.success(res.description);
+        } else {
+          message.error(res.description);
+        }
+      });
+    }
+
+    function modifyCodeId(code_name) {
+      console.log(code_name);
+      let params = new URLSearchParams();
+      params.append("userId", userId);
+      params.append("codeId", modifyingName.value);
+      params.append("codeId_new", code_name);
+      let url = path.website.modifyCodeID;
+      postData(url, params).then((res) => {
+        console.log(res);
+        getCodeList();
+      });
+    }
+
+    function lookAtCode(record) {
+      console.log(record);
+      router.push({
+        name: "editor",
+        query: {
+          codeId: record.code_name,
+        },
+      });
+    }
+
+    function modifyCode(record) {
+      console.log(record);
+    }
+
+    // 删除一个问题
+    function deleteOneCode(record) {
+      let params = new URLSearchParams();
+      params.append("userId", userId);
+      params.append("codeId", record.code_name);
+      let url = path.website.removeCode;
+      postData(url, params).then((res) => {
+        console.log(res);
+        message.success("删除成功");
+        getCodeList();
+      });
+    }
 
     return {
       scrollY,
       CodePagination,
       CodeColumns,
       CodeDataSource,
-      CodeRowSelection,
       alldataList,
+      addCode,
+      deleteOneCode,
+      modifyCode,
+      lookAtCode,
+      edit,
+      cancel,
+      save,
+      editableData,
+      visible,
+      showModal,
+      codeName,
+      handleCancel,
     };
   },
 };
@@ -158,6 +255,6 @@ export default {
 
 .table_area {
   height: 400px;
-  /* border: 1px solid red; */
+  border: 1px solid red;
 }
 </style>
