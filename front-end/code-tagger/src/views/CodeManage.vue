@@ -140,8 +140,10 @@ export default {
 
     const editableData = reactive({});
     const edit = (key) => {
-      editableData[key] = cloneDeep(CodeDataSource.value.filter((item) => key === item.code_name)[0]);
-      modifyingName.value = key;
+      if (Object.keys(editableData).length === 0) {
+        editableData[key] = cloneDeep(CodeDataSource.value.filter((item) => key === item.code_name)[0]);
+        modifyingName.value = key;
+      }
     };
     const save = (key) => {
       Object.assign(CodeDataSource.value.filter((item) => key === item.code_name)[0], editableData[key]);
@@ -194,16 +196,20 @@ export default {
     }
 
     function modifyCodeId(code_name) {
-      console.log(code_name);
-      let params = new URLSearchParams();
-      params.append("userId", userId);
-      params.append("codeId", modifyingName.value);
-      params.append("codeId_new", code_name);
-      let url = path.website.modifyCodeID;
-      postData(url, params).then((res) => {
-        console.log(res);
-        getCodeList();
-      });
+      if (code_name === modifyingName.value) {
+        modifyingName.value = "";
+      } else {
+        console.log(code_name);
+        let params = new URLSearchParams();
+        params.append("userId", userId);
+        params.append("codeId", modifyingName.value);
+        params.append("codeId_new", code_name);
+        let url = path.website.modifyCodeID;
+        postData(url, params).then((res) => {
+          console.log(res);
+          getCodeList();
+        });
+      }
     }
 
     function lookAtCode(record) {
@@ -216,7 +222,7 @@ export default {
       });
     }
 
-    // 删除一个问题
+    // 删除一个代码文件
     function deleteOneCode(record) {
       let params = new URLSearchParams();
       params.append("userId", userId);

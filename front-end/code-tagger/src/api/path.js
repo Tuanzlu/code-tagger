@@ -29,7 +29,7 @@ let path = {
     addLabel: Ip + "UserLabel/addLabel",
     removeLabel: Ip + "UserLabel/removeLabel",
     modifyLabelID: Ip + "UserLabel/modifyLabelID",
-    modifyLabelIntro: Ip + "UserLabel/modifyLabelIntro",
+    modifyLabelIntro: Ip + "UserLabel/modifyLabelintro",
   },
 };
 export default path;

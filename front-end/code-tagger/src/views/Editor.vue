@@ -1,12 +1,29 @@
 <template>
   <header-nav></header-nav>
   <div class="container">
-    <div class="main" @mouseup="mytest">
+    <div class="main">
       <div class="btn-bar">
         <a-button class="btn" @click="modifyCode">
           <template #icon><folder-outlined /></template>
           保存
         </a-button>
+        <a-button class="btn" @click="showModal">
+          <template #icon><folder-outlined /></template>
+          添加标注
+        </a-button>
+        <a-modal v-model:visible="visible" @ok="addMark">
+          <div style="margin: 20px">
+            <p>
+              <label>标签：</label>
+              <a-select v-model:value="label" :options="labelOptions" @change="handleLabelChange" style="width: 120px">
+              </a-select>
+            </p>
+          </div>
+          <template #footer>
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <a-button key="submit" type="primary" @click="addMark">确认</a-button>
+          </template>
+        </a-modal>
         <a-popconfirm title="是否确定删除？" ok-text="Yes" cancel-text="No" @confirm="deleteCode">
           <a-button class="btn">
             <template #icon><delete-outlined /></template>
@@ -19,6 +36,7 @@
         </a-select>
       </div>
       <codemirror
+        ref="cm"
         v-model="code"
         placeholder="Code gose here..."
         :style="style"
@@ -28,11 +46,8 @@
         :indent-with-tab="indentWithTab"
         :tabSize="tabSize"
         :extensions="extensions"
-        @cursorActivity="cursorActivity"
-        @ready="handleReady"
-        @change="handleChange"
         @focus="handleFocus"
-        @blur="useEditedCode"
+        @mouseup="handleMouseEvent"
       />
     </div>
   </div>
@@ -50,7 +65,7 @@ import { useRouter, useRoute } from "vue-router";
 
 import { message } from "ant-design-vue";
 // import { oneDark } from "@codemirror/theme-one-dark";
-import { reactive, defineComponent, ref, toRefs } from "vue";
+import { reactive, defineComponent, ref, toRefs, onMounted } from "vue";
 import { FolderOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
@@ -63,7 +78,14 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const visible = ref(false);
+    const showModal = () => {
+      visible.value = true;
+      getLabelList();
+    };
     let lang = ref("c");
+    let label = ref("");
+    let selectCode = ref("");
     const code = ref("");
     let selectValue = "cpp";
     const options = reactive({
@@ -75,7 +97,14 @@ export default defineComponent({
       tabSize: 2,
       extensions: [cpp()], //传递给CodeMirror EditorState。创建({扩展})
     });
-
+    const cm = ref();
+    onMounted(() => {
+      console.log(cm.value);
+      // cm.value.on("cursorActivity", (cm) => {
+      //   let test = cm.getSelection();
+      //   console.log(test);
+      // });
+    });
     const selectOptions = ref([
       {
         value: "c",
@@ -84,6 +113,17 @@ export default defineComponent({
       {
         value: "js",
         label: "Javascript",
+      },
+    ]);
+
+    const labelOptions = ref([
+      {
+        value: "test_label_1",
+        label: "test_label_1",
+      },
+      {
+        value: "test_label_2",
+        label: "test_label_2",
       },
     ]);
 
@@ -101,6 +141,8 @@ export default defineComponent({
       getData(url, params).then((res) => {
         console.log(res);
         code.value = res.rst[0].code;
+        lang.value = res.rst[0].language;
+        changeMode(lang.value);
         //添加语言转换逻辑 根据文件语言改变
       });
     }
@@ -114,6 +156,11 @@ export default defineComponent({
       let url = path.website.modifyCode;
       postData(url, params).then((res) => {
         console.log(res);
+        if (res.state === "success") {
+          message.success("success");
+        } else {
+          message.error("fail");
+        }
       });
     }
 
@@ -133,80 +180,109 @@ export default defineComponent({
       });
     }
 
-    function mytest() {
-      let selectedCode = window.getSelection().toString();
-      console.log(selectedCode);
-    }
-
-    function cursorActivity(cm) {
-      console.log(cm);
-
-      let cur = cm.getCursor();
-      console.log(cur);
-      getPositionTag(cm, cur);
-    }
-
-    function getPositionTag(cm, cur) {
-      let range = cm.getViewport();
-      range.from = Math.min(range.from, cur.line);
-      range.to = Math.max(cur.line + 1, range.to);
-      // 获取开始-结束标签位置
-      let match = Codemirror.findMatchingTag(cm, cur, range);
-      if (match) {
-        let { open, close } = match;
-        // 获取开始 结束标签的文本
-        console.log(cm.getRange(open.from, close ? close.to : open.to));
-      }
-    }
-
-    // 方法
-    // 失去焦点时,使用已编辑的代码
-    function useEditedCode() {
-      // console.log("@@@blur@@@code:", code.value);
-      // console.log("@@@blur@@@cpp:", cpp);
+    function handleMouseEvent() {
+      selectCode.value = window.getSelection().toString();
+      console.log(selectCode.value);
     }
 
     const handleSelectChange = (value) => {
       console.log(`selected ${value}`);
-      if (value === "c") {
+      changeMode(value);
+    };
+
+    function changeMode(mode) {
+      if (mode === "c") {
         options.extensions = [cpp()];
         selectValue = "cpp";
         options.mode = "text/x-c++src";
-      } else if (value === "js") {
+      } else if (mode === "js") {
         options.extensions = [javascript()];
         selectValue = "javascript";
         options.mode = "text/x-javascript";
       }
-    };
-
-    function handleChange(e) {
-      console.log("change:", e);
     }
 
-    function handleReady(e) {
-      console.log("ready:", e);
+    function addMark() {
+      let params = new URLSearchParams();
+      params.append("userId", userId);
+      params.append("codeId", codeId);
+      params.append("labelId", label.value);
+      params.append("code", selectCode.value);
+      params.append("new", true);
+      let url = path.website.addMark;
+      postData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          visible.value = false;
+          message.success(res.description);
+        } else {
+          message.error(res.description);
+        }
+      });
     }
+
+    function getLabelList() {
+      let params = {
+        userId: userId,
+      };
+
+      let url = path.website.getLabelList;
+      getData(url, params).then((res) => {
+        console.log(res);
+        labelOptions.value = [];
+        for (let i of res.rst) {
+          console.log(i);
+          labelOptions.value.push({
+            value: i.label_name,
+            label: i.label_name,
+          });
+        }
+
+        label.value = labelOptions.value[0].value;
+      });
+    }
+
+    // function handleChange(e) {
+    //   console.log("change:", e);
+    // }
+
+    // function handleReady(e) {
+    //   console.log("ready:", e);
+    // }
 
     function handleFocus(e) {
       console.log("focus:", e);
     }
 
+    function handleLabelChange(value) {
+      label.value = value;
+      console.log(value);
+    }
+    const handleCancel = () => {
+      visible.value = false;
+    };
     return {
       code,
       lang,
       selectValue,
       ...toRefs(options),
-      log: console.log,
-      useEditedCode,
       modifyCode,
       deleteCode,
-      mytest,
-      getPositionTag,
-      cursorActivity,
-      handleChange,
+      // mytest,
+      // handlecursorActivity,
       handleFocus,
-      handleReady,
+      // handleReady,
+      cm,
+      getLabelList,
       handleSelectChange,
+      handleLabelChange,
+      handleMouseEvent,
+      visible,
+      showModal,
+      addMark,
+      handleCancel,
+      labelOptions,
+      label,
       selectOptions,
     };
   },
