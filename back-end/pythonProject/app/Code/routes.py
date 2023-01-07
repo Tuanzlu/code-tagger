@@ -43,7 +43,7 @@ def addUserCode():
         userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
         code = request.args.get("code")
-    rst = codeDB.oneUserAddCode(userId, codeId, code)
+    rst = codeDB.oneUserAddCode(userId, code, codeId)
     if rst == "existed":
         return jsonify({"state": 'fail', "description": "Existing Code Name", "moreMsg":rst})
     else:
