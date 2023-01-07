@@ -13,7 +13,7 @@ class code_DB(DB):
         super(code_DB, self).__init__(self.db_path, self.init_table_sql)
     
     def selectOneUser(self, userID):
-        self.cursor.execute("SELECT userID, code, code_name, time FROM Code WHERE userID = '{}'".format(userID))
+        self.cursor.execute("SELECT userID, code, code_name, create_time FROM Code WHERE userID = '{}'".format(userID))
         outs = self.cursor.fetchall()
         return outs
 
@@ -28,7 +28,7 @@ class code_DB(DB):
         check_rst = self.checkUserCode(userID, c_name)
         t = get_now_time()
         if not check_rst:
-            self.execute("INSERT INTO Code (userID,code,code_name,time) VALUES (?,?,?,?)",(userID, c, c_name,t))
+            self.execute("INSERT INTO Code (userID,code,code_name,create_time) VALUES (?,?,?,?)",(userID, c, c_name,t))
             return self.cursor.lastrowid
         else:
             return "existed"
