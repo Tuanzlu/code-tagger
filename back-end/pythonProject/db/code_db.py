@@ -36,7 +36,7 @@ class code_DB(DB):
         return self.cursor.fetchall()
 
     def oneUserModifyCodeID(self, userID, c_name, c_name_new):
-        check_rst = self.checkUserCode(userID, c_name)
+        check_rst = self.checkUserCode(userID, c_name_new)
         if not check_rst:
             self.execute("UPDATE Code SET code_name='{}' WHERE userID='{}' AND code_name='{}'".format(c_name_new, userID, c_name))
             return self.cursor.lastrowid
