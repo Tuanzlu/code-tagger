@@ -2,19 +2,24 @@
   <header-nav current="code"></header-nav>
 
   <div class="container">
-    <div class="up_bar">
-      <a-button @click="showModal">新增代码文件</a-button>
-      <a-modal v-model:visible="visible" @ok="addCode">
-        <div style="margin: 20px">
-          <label>代码名称：</label><a-input style="width: 200px" v-model:value="codeName" />
-        </div>
-        <template #footer>
-          <a-button key="back" @click="handleCancel">取消</a-button>
-          <a-button key="submit" type="primary" @click="addCode">确认</a-button>
-        </template>
-      </a-modal>
-    </div>
     <div class="main">
+      <div class="up_bar">
+        <a-button @click="showModal">新增代码文件</a-button>
+        <a-modal v-model:visible="visible" @ok="addCode">
+          <div style="margin: 20px">
+            <p><label>代码名称：</label><a-input style="width: 200px" v-model:value="codeName" /></p>
+            <p>
+              <label>代码语言：</label>
+              <a-select v-model:value="lang" :options="selectOptions" @change="handleSelectChange" style="width: 120px">
+              </a-select>
+            </p>
+          </div>
+          <template #footer>
+            <a-button key="back" @click="handleCancel">取消</a-button>
+            <a-button key="submit" type="primary" @click="addCode">确认</a-button>
+          </template>
+        </a-modal>
+      </div>
       <div class="table-area">
         <div class="code-table">
           <a-table
@@ -43,9 +48,8 @@
                 <div class="editable-row-operations">
                   <span v-if="editableData[record.code_name]">
                     <a-typography-link style="margin: 0 5px" @click="save(record.code_name)">保存</a-typography-link>
-                    <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.code_name)">
-                      <a>取消</a>
-                    </a-popconfirm>
+
+                    <a @click="cancel(record.code_name)">取消</a>
                   </span>
                   <span v-else>
                     <a @click="edit(record.code_name)">编辑</a>
@@ -102,8 +106,8 @@ export default {
       },
       {
         title: "修改时间",
-        key: "update_time",
-        dataIndex: "update_time",
+        key: "create_time",
+        dataIndex: "create_time",
         // width: "20%",
       },
       {
@@ -113,10 +117,19 @@ export default {
       },
     ];
     const CodeDataSource = ref([]);
-
+    const selectOptions = ref([
+      {
+        value: "c",
+        label: "C/C++",
+      },
+      {
+        value: "js",
+        label: "Javascript",
+      },
+    ]);
+    let lang = ref("c");
     // const userId = window.localStorage.getItem("userId");
     let userId = "lqy";
-    let modifyName = ref("");
     let codeName = ref("");
     let modifyingName = ref("");
     getCodeList();
@@ -154,6 +167,10 @@ export default {
       });
     }
 
+    const handleSelectChange = (value) => {
+      console.log(`selected ${value}`);
+    };
+
     const handleCancel = () => {
       visible.value = false;
     };
@@ -162,6 +179,7 @@ export default {
       let params = new URLSearchParams();
       params.append("userId", userId);
       params.append("codeId", codeName.value);
+      params.append("language", lang.value);
       let url = path.website.addCode;
       postData(url, params).then((res) => {
         console.log(res);
@@ -198,10 +216,6 @@ export default {
       });
     }
 
-    function modifyCode(record) {
-      console.log(record);
-    }
-
     // 删除一个问题
     function deleteOneCode(record) {
       let params = new URLSearchParams();
@@ -223,16 +237,18 @@ export default {
       alldataList,
       addCode,
       deleteOneCode,
-      modifyCode,
       lookAtCode,
       edit,
       cancel,
       save,
+      lang,
+      selectOptions,
       editableData,
       visible,
       showModal,
       codeName,
       handleCancel,
+      handleSelectChange,
     };
   },
 };
@@ -245,7 +261,7 @@ export default {
 .up_bar {
   /* border: 1px solid red; */
   height: 20px;
-  margin: 20px;
+  margin: 20px 0;
 }
 .main {
   margin: auto;
