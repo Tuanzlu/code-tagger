@@ -7,11 +7,12 @@
       <a-menu-item key="index">首页</a-menu-item>
       <a-menu-item key="code">代码库</a-menu-item>
       <a-menu-item key="tag">标注库</a-menu-item>
-      <a-menu-item key="person">
-        <a-avatar size="small">
+      <a-sub-menu key="person">
           <template #icon><UserOutlined /></template>
-        </a-avatar>
-      </a-menu-item>
+          <a-menu-item key="login"><router-link to="../login">Log in</router-link></a-menu-item>
+          <a-menu-item key="register"><router-link to="../register">Register</router-link></a-menu-item>
+        
+      </a-sub-menu>
     </a-menu>
   </div>
 </template>

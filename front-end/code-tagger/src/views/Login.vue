@@ -11,9 +11,9 @@
     @finishFailed="onFinishFailed"
   >
     <a-form-item
-      label="Username"
-      name="username"
-      :rules="[{ required: true, message: 'Please input your username!' }]"
+      label="Telphone"
+      name="telphone"
+      :rules="[{ required: true, message: 'Please input your telphone!' }]"
     >
       <a-input v-model:value="formState.username" />
     </a-form-item>
@@ -30,9 +30,14 @@
       <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
     </a-form-item>
 
-    <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-      <a-button type="primary" html-type="submit">Submit</a-button>
+    <a-form-item name="login" :wrapper-col="{ offset: 8, span: 16 }">
+      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button">
+        Log in
+      </a-button>
+      Or
+      <router-link to="../register">Register now!</router-link>
     </a-form-item>
+
     </a-form>
   </div>
 </template>
@@ -41,7 +46,7 @@ import { defineComponent, reactive } from 'vue';
 export default defineComponent({
   setup() {
     const formState = reactive({
-      username: '',
+      telphone: '',
       password: '',
       remember: true,
     });
