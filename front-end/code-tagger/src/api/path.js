@@ -22,6 +22,7 @@ let path = {
     getUserMark: Ip + "Mark/getUserMark",
     addMark: Ip + "Mark/addMark",
     removeMark: Ip + "Mark/removeMark",
+    getCodeMark: Ip + "Mark/getCodeMark",
 
     //UserLabel
     getLabelList: Ip + "UserLabel/getUser",

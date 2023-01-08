@@ -8,15 +8,21 @@
           保存
         </a-button>
         <a-button class="btn" @click="showModal">
-          <template #icon><folder-outlined /></template>
+          <template #icon><plus-outlined /></template>
           添加标注
         </a-button>
         <a-modal v-model:visible="visible" @ok="addMark">
           <div style="margin: 20px">
-            <p>
+            <p v-if="adding === false">
               <label>标签：</label>
               <a-select v-model:value="label" :options="labelOptions" @change="handleLabelChange" style="width: 120px">
               </a-select>
+              <a-button style="margin: 10px" type="small" @click="changeAdding"><plus-outlined />添加标签</a-button>
+            </p>
+            <p v-if="adding === true">
+              <label>新增标签：</label>
+              <a-input style="width: 120px" v-model:value="addingLabel" />
+              <a-button style="margin: 10px" type="small" @click="changeAdding"><left-square-outlined />返回</a-button>
             </p>
           </div>
           <template #footer>
@@ -53,7 +59,7 @@
           />
         </div>
 
-        <mark-list ref="markRF" :id="userId"></mark-list>
+        <mark-list ref="markRF" :docid="codeId" :id="userId"></mark-list>
       </div>
     </div>
   </div>
@@ -72,7 +78,7 @@ import MarkList from "@/components/MarkList.vue";
 import { message } from "ant-design-vue";
 // import { oneDark } from "@codemirror/theme-one-dark";
 import { reactive, defineComponent, ref, toRefs, onMounted } from "vue";
-import { FolderOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+import { FolderOutlined, LeftSquareOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
   components: {
@@ -81,8 +87,12 @@ export default defineComponent({
     HeaderNav,
     FolderOutlined,
     DeleteOutlined,
+    PlusOutlined,
+    LeftSquareOutlined,
   },
   setup() {
+    let adding = ref(false);
+    let addingLabel = ref("");
     let markRF = ref();
     const router = useRouter();
     const route = useRoute();
@@ -108,10 +118,6 @@ export default defineComponent({
     const cm = ref();
     onMounted(() => {
       console.log(markRF.value);
-      // cm.value.on("cursorActivity", (cm) => {
-      //   let test = cm.getSelection();
-      //   console.log(test);
-      // });
     });
     const selectOptions = ref([
       {
@@ -215,16 +221,22 @@ export default defineComponent({
       let params = new URLSearchParams();
       params.append("userId", userId);
       params.append("codeId", codeId);
-      params.append("labelId", label.value);
       params.append("code", selectCode.value);
-      params.append("new", true);
+      if (adding.value === true) {
+        params.append("new", true);
+        params.append("labelId", addingLabel.value);
+      } else {
+        params.append("labelId", label.value);
+      }
       let url = path.website.addMark;
       postData(url, params).then((res) => {
         console.log(res);
         if (res.state === "success") {
           visible.value = false;
           message.success(res.description);
-          markRF.value.getUserMark();
+          markRF.value.getCodeMark();
+          addingLabel.value = "";
+          adding.value = false;
         } else {
           message.error(res.description);
         }
@@ -253,14 +265,6 @@ export default defineComponent({
       });
     }
 
-    // function handleChange(e) {
-    //   console.log("change:", e);
-    // }
-
-    // function handleReady(e) {
-    //   console.log("ready:", e);
-    // }
-
     function handleFocus(e) {
       console.log("focus:", e);
       console.log(cm.value.cursor);
@@ -273,7 +277,24 @@ export default defineComponent({
     const handleCancel = () => {
       visible.value = false;
     };
+
+    const addItem = () => {
+      console.log("addItem");
+      labelOptions.value.push({
+        value: "test add",
+        label: "test add",
+      });
+    };
+
+    function changeAdding() {
+      adding.value = !adding.value;
+    }
+
     return {
+      addingLabel,
+      adding,
+      changeAdding,
+      addItem,
       markRF,
       code,
       lang,
@@ -287,6 +308,7 @@ export default defineComponent({
       // handleReady,
       cm,
       userId,
+      codeId,
       getLabelList,
       handleSelectChange,
       handleLabelChange,
