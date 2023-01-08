@@ -182,6 +182,8 @@ export default {
         if (res.state === "success") {
           visible.value = false;
           getLabelList();
+          labelName.value = "";
+          labelIntro.value = "";
           message.success(res.description);
         } else {
           message.error(res.description);

@@ -35,20 +35,26 @@
         <a-select v-model:value="lang" :options="selectOptions" @change="handleSelectChange" style="width: 120px">
         </a-select>
       </div>
-      <codemirror
-        ref="cm"
-        v-model="code"
-        placeholder="Code gose here..."
-        :style="style"
-        :mode="mode"
-        :spellcheck="spellcheck"
-        :autofocus="autofocus"
-        :indent-with-tab="indentWithTab"
-        :tabSize="tabSize"
-        :extensions="extensions"
-        @focus="handleFocus"
-        @mouseup="handleMouseEvent"
-      />
+      <div class="middle-view">
+        <div style="width: 750px; margin-right: 20px">
+          <codemirror
+            ref="cm"
+            v-model="code"
+            placeholder="Code gose here..."
+            :style="style"
+            :mode="mode"
+            :spellcheck="spellcheck"
+            :autofocus="autofocus"
+            :indent-with-tab="indentWithTab"
+            :tabSize="tabSize"
+            :extensions="extensions"
+            @focus="handleFocus"
+            @mouseup="handleMouseEvent"
+          />
+        </div>
+
+        <mark-list ref="markRF" :id="userId"></mark-list>
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +68,7 @@ import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import path from "@/api/path.js";
 import { useRouter, useRoute } from "vue-router";
-
+import MarkList from "@/components/MarkList.vue";
 import { message } from "ant-design-vue";
 // import { oneDark } from "@codemirror/theme-one-dark";
 import { reactive, defineComponent, ref, toRefs, onMounted } from "vue";
@@ -71,11 +77,13 @@ import { FolderOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
   components: {
     Codemirror,
+    MarkList,
     HeaderNav,
     FolderOutlined,
     DeleteOutlined,
   },
   setup() {
+    let markRF = ref();
     const router = useRouter();
     const route = useRoute();
     const visible = ref(false);
@@ -99,7 +107,7 @@ export default defineComponent({
     });
     const cm = ref();
     onMounted(() => {
-      console.log(cm.value);
+      console.log(markRF.value);
       // cm.value.on("cursorActivity", (cm) => {
       //   let test = cm.getSelection();
       //   console.log(test);
@@ -180,7 +188,8 @@ export default defineComponent({
       });
     }
 
-    function handleMouseEvent() {
+    function handleMouseEvent(e) {
+      console.log(e);
       selectCode.value = window.getSelection().toString();
       console.log(selectCode.value);
     }
@@ -215,6 +224,7 @@ export default defineComponent({
         if (res.state === "success") {
           visible.value = false;
           message.success(res.description);
+          markRF.value.getUserMark();
         } else {
           message.error(res.description);
         }
@@ -237,8 +247,9 @@ export default defineComponent({
             label: i.label_name,
           });
         }
-
-        label.value = labelOptions.value[0].value;
+        if (labelOptions.value.length !== 0) {
+          label.value = labelOptions.value[0].value;
+        }
       });
     }
 
@@ -252,6 +263,7 @@ export default defineComponent({
 
     function handleFocus(e) {
       console.log("focus:", e);
+      console.log(cm.value.cursor);
     }
 
     function handleLabelChange(value) {
@@ -262,6 +274,7 @@ export default defineComponent({
       visible.value = false;
     };
     return {
+      markRF,
       code,
       lang,
       selectValue,
@@ -273,6 +286,7 @@ export default defineComponent({
       handleFocus,
       // handleReady,
       cm,
+      userId,
       getLabelList,
       handleSelectChange,
       handleLabelChange,
@@ -303,5 +317,9 @@ export default defineComponent({
 }
 .btn {
   margin: 10px 10px 10px 0;
+}
+.middle-view {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

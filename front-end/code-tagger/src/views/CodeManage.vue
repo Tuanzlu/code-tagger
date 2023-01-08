@@ -188,6 +188,8 @@ export default {
         if (res.state === "success") {
           visible.value = false;
           getCodeList();
+          codeName.value = "";
+          lang.value = "c";
           message.success(res.description);
         } else {
           message.error(res.description);
