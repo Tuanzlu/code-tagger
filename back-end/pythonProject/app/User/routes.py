@@ -91,3 +91,26 @@ def removeUser():
     else:
         user.removeUser(username, password, telphone)
         return jsonify({"state":'success', "description": "success"})
+
+
+@User.route('/modifyPassword', methods=['POST'])
+def modifyPassword():
+    telphone = request.form.get("telphone")
+    old_password = request.form.get("old_password")
+    new_password = request.form.get("new_password")
+    new_password_again = request.form.get("new_password_again")
+    res = user.GetLoginInfo(telphone)
+    if res == None:
+        return jsonify({"state":'fail', "description": "Please enter the correct telephone"})
+    temp = list(res.values())
+    res_p = temp[0]
+    if res_p != old_password:
+        return jsonify({"state":'fail', "description": "Please enter the correct old password"})
+    else:
+        if new_password == old_password:
+            return jsonify({"state": 'fail', "description": "Please enter a new password different from the old one"})
+        elif new_password != new_password_again:
+            return jsonify({"state":'fail', "description": "The two passwords do not match"})
+        else:
+            user.updatePassword(telphone, new_password)
+            return jsonify({"state":'success', "description": "success"})
