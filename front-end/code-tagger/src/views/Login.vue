@@ -1,9 +1,11 @@
 <template>
-  <a-form
+  <div class="container">
+    <h1><center>Log in </center></h1>
+    <a-form
     :model="formState"
     name="basic"
     :label-col="{ span: 8 }"
-    :wrapper-col="{ span: 16 }"
+    :wrapper-col="{ span: 8 }"
     autocomplete="off"
     @finish="onFinish"
     @finishFailed="onFinishFailed"
@@ -31,7 +33,8 @@
     <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
       <a-button type="primary" html-type="submit">Submit</a-button>
     </a-form-item>
-  </a-form>
+    </a-form>
+  </div>
 </template>
 <script>
 import { defineComponent, reactive } from 'vue';
@@ -42,21 +45,24 @@ export default defineComponent({
       password: '',
       remember: true,
     });
-
     const onFinish = values => {
       console.log('Success:', values);
     };
-
     const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
     };
-
     return {
       formState,
       onFinish,
       onFinishFailed,
     };
   },
-
 });
 </script>
+
+<style scoped>
+.container {
+  min-height: 600px;
+}
+
+</style>
