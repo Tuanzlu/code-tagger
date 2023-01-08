@@ -20,6 +20,11 @@ class mark_DB(DB):
         self.cursor.execute("SELECT userID, codeID, code, labelID FROM Mark WHERE userID = '{}' AND labelID = '{}'".format(userID,labelID))
         outs = self.cursor.fetchall()
         return outs
+    
+    def selectOneCode(self, userID, codeID):
+        self.cursor.execute("SELECT userID, codeID, code, labelID FROM Mark WHERE userID = '{}' AND codeID = '{}'".format(userID,codeID))
+        outs = self.cursor.fetchall()
+        return outs
 
     def checkUserMark(self, userID, c, co, l):
         self.cursor.execute("SELECT * FROM Mark WHERE userID='{}' AND codeID='{}' AND code='{}' AND labelID='{}'".format(userID,c,co,l))
@@ -40,7 +45,7 @@ class mark_DB(DB):
         self.execute("UPDATE Mark SET labelID='{}' WHERE userID='{}' AND labelID='{}'" .format(l_new, userID, l_name))
         return self.cursor.lastrowid
     
-    def oneUserModifyCodeID(self, userID, c_name, c_new):
+    def oneUserModifycodeID(self, userID, c_name, c_new):
         self.execute("UPDATE Mark SET codeID='{}' WHERE userID='{}' AND codeID='{}'" .format(c_new, userID, c_name))
         return self.cursor.lastrowid
 
