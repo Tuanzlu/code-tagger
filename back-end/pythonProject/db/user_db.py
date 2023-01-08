@@ -37,6 +37,10 @@ class user_DB(DB):
         self.cursor.execute("SELECT * FROM users WHERE username='{}'".format(username))
         return self.cursor.fetchone()
 
+    def updatePassword(self, telphone, passwd):
+        self.cursor.execute("UPDATE users SET passwd='{}' WHERE telphone='{}'".format(passwd, telphone))
+        return self.cursor.fetchone()
+
 if __name__ == "__main__":
     userdb = user_DB()
     print("first print...")
