@@ -45,7 +45,7 @@ def addUserMark_func():
     rst = mark1.oneUserAddMark(userId, codeId, code, labelId)
     if rst == "existed":
         return jsonify({"state":'fail', "description": "Existing mark", "moreMsg":rst})
-    if new == False:
+    if not new:
         return jsonify({"state":'success', "description": "success", "moreMsg":rst})
     else:
         rst2 = label1.oneUserAddLabel(userId, labelId, "")
@@ -65,6 +65,18 @@ def getLabelMark_func():
     print(userId)
     mark1 = mark_DB()
     rst = mark1.selectOneLabel(userId,labelId)
+    return jsonify({'state':'success', "rst":rst})
+
+@Mark.route('/getCodeMark', methods=["POST", "GET"])
+def getCodeMark_func():
+    if request.method == "GET":
+        userId = request.args.get("userId")
+        codeId = request.args.get("codeId")
+    else:
+        userId = request.form.get("userId")
+        codeId = request.form.get("codeId")
+    mark1 = mark_DB()
+    rst = mark1.selectOneCode(userId,codeId)
     return jsonify({'state':'success', "rst":rst})
 
 @Mark.route('/getUserMark', methods=["POST", "GET"])
