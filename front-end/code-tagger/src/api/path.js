@@ -6,8 +6,11 @@ let path = {
     register: Ip + "User/register",
     login: Ip + "User/login",
     exit: Ip + "User/exit",
+    modifyPW: Ip + "User/modifyPassword",
     removeUser: Ip + "User/removeUser",
-    // getUser:
+    // Admin:
+    getUserList: Ip + "Admin/getUsers",
+    admin_removeUser: Ip + "Admin/removeUser",
 
     //Code
     getCodeList: Ip + "Code/getCodes",

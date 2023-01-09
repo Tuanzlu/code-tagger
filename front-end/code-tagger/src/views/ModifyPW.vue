@@ -84,7 +84,7 @@ export default defineComponent({
       params.append("old_password", formState.user.old_password);
       params.append("new_password", formState.user.new_password);
       params.append("new_password_again", formState.user.new_password_again);
-      let url = path.website.register;
+      let url = path.website.modifyPW;
       postData(url, params).then((res) => {
         console.log(res);
         if (res.state === "success") {
