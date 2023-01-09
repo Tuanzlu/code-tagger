@@ -1,9 +1,11 @@
 from app.User import User
 from flask import request, session, jsonify, render_template
 from db.user_db import user_DB
+from db.code_db import code_DB
 
 
 user = user_DB()
+codeDB = code_DB()
 
 
 # 两个函数，用于将flask_sql的输出转化为可以直接网络传输的json格式
@@ -90,6 +92,7 @@ def removeUser():
         return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
         user.removeUser(username, password, telphone)
+        codeDB.removeOneUser(username)
         return jsonify({"state":'success', "description": "success"})
 
 
