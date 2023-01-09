@@ -28,7 +28,7 @@
             :row-key="(record) => record.code_name"
             :data-source="CodeDataSource"
             :columns="CodeColumns"
-            :scroll="scrollY"
+            :pagination="CodePagination"
           >
             <template #title>代码库</template>
             <template #bodyCell="{ column, record, text }">
@@ -64,8 +64,6 @@
                     <a style="margin: 0 5px" @click="lookAtCode(record)">查看</a>
                   </span>
                 </div>
-
-                <!-- <a style="margin: 0 5px 0 0" @click="showModal(record.code_name)">编辑</a> -->
               </template>
             </template>
           </a-table>
@@ -89,11 +87,10 @@ export default {
   components: { HeaderNav },
   setup() {
     const router = useRouter();
-    let scrollY = reactive({ y: document.body.offsetHeight - 265 });
     const CodePagination = reactive({
       total: 100,
       showTotal: (total) => `共 ${total} 条`,
-      pageSize: 50,
+      pageSize: 10,
       showQuickJumper: true,
     });
     let alldataList = [];
@@ -102,18 +99,22 @@ export default {
         title: "代码文件名",
         key: "codeId",
         dataIndex: "code_name",
-        // width: "15%",
+        width: "30%",
+        align: "center",
       },
       {
         title: "修改时间",
         key: "create_time",
         dataIndex: "create_time",
-        // width: "20%",
+        width: "40%",
+        align: "center",
       },
       {
         title: "操作",
         dataIndex: "action",
         key: "action",
+        width: "30%",
+        align: "center",
       },
     ];
     const CodeDataSource = ref([]);
@@ -166,6 +167,7 @@ export default {
       getData(url, params).then((res) => {
         console.log(res);
         CodeDataSource.value = res.rst;
+        CodePagination.total = CodeDataSource.value.length;
       });
     }
 
@@ -238,7 +240,6 @@ export default {
     }
 
     return {
-      scrollY,
       CodePagination,
       CodeColumns,
       CodeDataSource,
@@ -275,10 +276,5 @@ export default {
   margin: auto;
   width: 80%;
   height: 500px;
-}
-
-.table_area {
-  height: 400px;
-  border: 1px solid red;
 }
 </style>

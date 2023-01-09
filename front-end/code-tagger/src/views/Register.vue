@@ -29,8 +29,8 @@
 
       <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
         <a-button type="primary" html-type="submit" @click="handleRegister()">注册</a-button>
-        <br>
-        <router-link to="../login">已有账号？点我登陆</router-link>
+        <br />
+        <router-link to="../login">已有账号？点我登录</router-link>
       </a-form-item>
     </a-form>
   </div>
@@ -115,7 +115,8 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 650px;
+
   background-size: cover;
   background: #eeeded;
 }

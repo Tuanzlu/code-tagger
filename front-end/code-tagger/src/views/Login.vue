@@ -11,7 +11,7 @@
       @finishFailed="onFinishFailed"
       class="login-form"
     >
-      <h1 style="text-align: center">登陆</h1>
+      <h1 style="text-align: center">登录</h1>
       <a-form-item
         label="手机号"
         name="telphone"
@@ -21,27 +21,15 @@
         <a-input v-model:value="formState.telphone" />
       </a-form-item>
 
-      <a-form-item
-        label="密码"
-        name="password"
-        :rules="[{ required: true, message: '请输入密码！' }]"
-      >
+      <a-form-item label="密码" name="password" :rules="[{ required: true, message: '请输入密码！' }]">
         <a-input-password v-model:value="formState.password" />
       </a-form-item>
 
       <a-form-item name="login" :wrapper-col="{ offset: 8, span: 16 }">
-        <a-button
-          :disabled="disabled"
-          type="primary"
-          html-type="submit"
-          class="login-form-button"
-          @click="handleLogin()"
-        >
-          登陆
-        </a-button>
+        <a-button type="primary" html-type="submit" class="login-form-button" @click="handleLogin()"> 登录 </a-button>
         Or
         <router-link to="../register">立即注册</router-link>
-        <br>
+        <br />
         <router-link to="../modifypw">修改密码</router-link>
       </a-form-item>
     </a-form>
@@ -83,12 +71,17 @@ export default defineComponent({
         if (res.state === "success") {
           message.success(res.description);
           window.localStorage.setItem("userId", res.rst.username);
-          // window.localStorage.setItem("userId", "lqy");
-          router.push({
-            name: "code",
-          });
+          if (res.rst.username === "admin") {
+            router.push({
+              name: "alluser",
+            });
+          } else {
+            router.push({
+              name: "code",
+            });
+          }
         } else {
-          message.error(res.description);
+          message.error(res.state);
         }
       });
     }
@@ -107,7 +100,8 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 650px;
+
   background-size: cover;
   background: #eeeded;
 }

@@ -2,12 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
   {
-    // 首页
-    path: "/",
-    name: "index",
-    component: () => import("../views/Index.vue"),
-  },
-  {
     // 平台使用说明
     path: "/intro",
     name: "intro",
@@ -45,7 +39,7 @@ const routes = [
   },
   {
     // 代码库
-    path: "/code",
+    path: "/",
     name: "code",
     component: () => import("../views/CodeManage.vue"),
   },
@@ -60,12 +54,32 @@ const routes = [
     path: "/alluser",
     name: "alluser",
     component: () => import("../views/AllUser.vue"),
-  }
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const userId = window.localStorage.getItem("userId");
+  console.log(userId);
+
+  if (userId === null) {
+    console.log(userId);
+    console.log(to);
+    if (to.path !== "/intro" && to.path !== "/register" && to.path !== "/login" && to.path !== "/modifypw") {
+      return router.replace({
+        name: "login",
+      });
+    } else {
+      console.log(to);
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
