@@ -36,7 +36,7 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
-    // userRoute route
+    const userId = window.localStorage.getItem("userId");
     let logoUrl = require("@/assets/logo.png");
     let curPage = [props.current];
     function changePage(item) {
@@ -62,20 +62,14 @@ export default defineComponent({
     }
 
     function handleAdmin(){
-      // 待补充判断是否为admin
-      let params = new URLSearchParams();
-      let url = path.website.exit;
-      getData(url, params).then((res) => {
-        console.log(res);
-        if (res.state === "success") {
-          message.success(res.description);
-          router.push({
-            name: "alluser",
-          });
-        } else {
-          message.error(res.description);
-        }
-      });
+      if (userId == "admin"){
+        router.push({
+          name: "alluser",
+        });
+      }
+      else{
+        message.error("Operation Denied!");
+      }
     }
 
     return {
