@@ -1,4 +1,5 @@
 <template>
+  <header-nav></header-nav>
   <div class="container">
     <a-form
       :model="formState"
@@ -53,8 +54,12 @@ import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
+import HeaderNav from "@/components/HeaderNav.vue";
 
 export default defineComponent({
+  components: {
+    HeaderNav,
+  },
   setup() {
     const router = useRouter();
 
@@ -77,8 +82,8 @@ export default defineComponent({
         console.log(res);
         if (res.state === "success") {
           message.success(res.description);
-          //window.localStorage.setItem("userId", res.userId);
-          window.localStorage.setItem("userId", "lqy");
+          window.localStorage.setItem("userId", res.rst.username);
+          // window.localStorage.setItem("userId", "lqy");
           router.push({
             name: "code",
           });

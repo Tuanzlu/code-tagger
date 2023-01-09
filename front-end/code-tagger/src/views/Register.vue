@@ -1,4 +1,5 @@
 <template>
+  <header-nav></header-nav>
   <div class="container">
     <a-form
       :model="formState"
@@ -41,8 +42,12 @@ import path from "@/api/path.js";
 import { postData } from "@/api/webpost";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
+import HeaderNav from "@/components/HeaderNav.vue";
 
 export default defineComponent({
+  components: {
+    HeaderNav,
+  },
   setup() {
     const router = useRouter();
 

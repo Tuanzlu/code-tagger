@@ -1,4 +1,5 @@
 <template>
+  <header-nav></header-nav>
   <div class="allUser">
     <a-table
       :columns="columns"
@@ -9,7 +10,7 @@
     >
     <template #bodyCell="{ column, record  }">
         <template v-if="column.dataIndex === 'del'">
-          <a-button @click="handleDel(record )">删除</a-button>
+          <a-button @click="handleDel(record )">删除用户</a-button>
         </template>
       </template>
       
@@ -18,8 +19,12 @@
   </template>
   <script>
   import { defineComponent, reactive, ref } from 'vue';
+  import HeaderNav from "@/components/HeaderNav.vue";
   
   export default defineComponent({
+    components: {
+      HeaderNav,
+    },
     setup() {
       const dataSource = reactive([
       {
@@ -43,48 +48,47 @@
   }
       ])
       const loading = reactive(false)
-      const columns = reactive([
-        {
-    name: 'Username',
-    title: 'Username',
-    dataIndex: 'username',
-    align:"center",
-    key: 'username',
-  },
-  {
-    name: 'Telphone',
-    title: 'Telphone',
-    dataIndex: 'telphone',
-    align:"center",
-    key: 'telphone',
-  },
-  {
-    name: 'Code Files',
-    title: 'Code Files',
-    dataIndex: 'numFile',
-    align:"center",
-    key: 'numFile',
-  },
-  {
-    name: 'Tags',
-    title: 'Tags',
-    dataIndex: 'numTag',
-    align:"center",
-    key: 'numTag',
-  },
-  {
-    name: 'Relations',
-    title: 'Relations',
-    dataIndex: 'numRelation',
-    align:"center",
-    key: 'numRelation',
-  },
-  {
-    title: '操作',
-    align:"center",
-  dataIndex:'del',
-  }
-      ])
+      const columns = reactive([{
+        name: 'Username',
+        title: '用户名',
+        dataIndex: 'username',
+        align:"center",
+        key: 'username',
+      },
+      {
+        name: 'Telphone',
+        title: '手机号',
+        dataIndex: 'telphone',
+        align:"center",
+        key: 'telphone',
+      },
+      {
+        name: 'Code Files',
+        title: '代码文件',
+        dataIndex: 'numFile',
+        align:"center",
+        key: 'numFile',
+      },
+      {
+        name: 'Tags',
+        title: '标签',
+        dataIndex: 'numTag',
+        align:"center",
+        key: 'numTag',
+      },
+      {
+        name: 'Relations',
+        title: '标注关系',
+        dataIndex: 'numRelation',
+        align:"center",
+        key: 'numRelation',
+      },
+      {
+        title: '操作',
+        align:"center",
+        dataIndex:'del',
+      }
+    ])
   
   const pagination=reactive({
     position:['bottomLeft'],
