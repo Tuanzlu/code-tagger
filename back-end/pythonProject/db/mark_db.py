@@ -50,8 +50,11 @@ class mark_DB(DB):
         return self.cursor.lastrowid
 
     def selectAll(self):
-        self.cursor.execute("SELECT * FROM Code")
+        self.cursor.execute("SELECT * FROM Mark")
         return self.cursor.fetchall()
+
+    def admin_removeUser(self, userID):
+        self.execute("DELETE FROM Mark WHERE userID='{}'".format(userID))
 
 if __name__ == "__main__":
     mark1 = mark_DB()
