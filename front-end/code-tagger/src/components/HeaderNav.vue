@@ -9,7 +9,7 @@
       <a-menu-item key="tag">标注库</a-menu-item>
       <a-sub-menu key="person">
           <template #icon><UserOutlined /></template>
-          <a-menu-item> userid:{{userId}} </a-menu-item>
+          <a-menu-item> 当前用户：{{userId}} </a-menu-item>
           <a-menu-item key="login"><router-link to="../login">登陆</router-link></a-menu-item>
           <a-menu-item key="admin" @click="handleAdmin()">以管理员身份运行</a-menu-item>
           <a-menu-item key="register"><router-link to="../register">注册</router-link></a-menu-item>
