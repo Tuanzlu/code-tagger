@@ -9,10 +9,11 @@
       <a-menu-item key="tag">标注库</a-menu-item>
       <a-sub-menu key="person">
           <template #icon><UserOutlined /></template>
-          <a-menu-item key="login"><router-link to="../login">Log in</router-link></a-menu-item>
-          <a-menu-item key="register"><router-link to="../register">Register</router-link></a-menu-item>
-          <a-menu-item key="exit" @click="handleAdmin()">Admin</a-menu-item>
-          <a-menu-item key="exit" @click="handleExit()">Exit</a-menu-item>
+          <a-menu-item key="login"><router-link to="../login">登陆</router-link></a-menu-item>
+          <a-menu-item key="admin" @click="handleAdmin()">以管理员身份运行</a-menu-item>
+          <a-menu-item key="register"><router-link to="../register">注册</router-link></a-menu-item>
+          <a-menu-item key="modifypw"><router-link to="../modifypw">修改密码</router-link></a-menu-item>
+          <a-menu-item key="exit" @click="handleExit()">退出</a-menu-item>
         
       </a-sub-menu>
     </a-menu>
@@ -41,13 +42,6 @@ export default defineComponent({
     function changePage(item) {
       router.push({
         name: item.key,
-      });
-    }
-
-    function toIndex() {
-      // 待补充登录逻辑判断
-      router.push({
-        name: "index",
       });
     }
 
@@ -88,7 +82,6 @@ export default defineComponent({
       curPage,
       logoUrl,
       changePage,
-      toIndex,
       handleExit,
       handleAdmin,
     };

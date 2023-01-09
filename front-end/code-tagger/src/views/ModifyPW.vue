@@ -8,28 +8,26 @@
       @finish="onFinish"
       class="login-form"
     >
-      <h1 style="text-align: center">注册</h1>
-
-      <a-form-item :name="['user', 'name']" label="用户名" :rules="[{ required: true }]">
-        <a-input v-model:value="formState.user.name" />
-      </a-form-item>
+      <h1 style="text-align: center">修改密码</h1>
 
       <a-form-item :name="['user', 'telphone']" label="手机号" :rules="[{ required: true }]">
         <a-input v-model:value="formState.user.telphone" />
       </a-form-item>
 
-      <a-form-item :name="['user', 'password']" label="密码" :rules="[{ required: true }]">
-        <a-input-password v-model:value="formState.user.password" />
+      <a-form-item :name="['user', 'old_password']" label="旧密码" :rules="[{ required: true }]">
+        <a-input-password v-model:value="formState.user.old_password" />
       </a-form-item>
 
-      <a-form-item :name="['user', 'password_again']" label="再次输入密码" :rules="[{ required: true }]">
-        <a-input-password v-model:value="formState.user.password_again" />
+      <a-form-item :name="['user', 'new_password']" label="新密码" :rules="[{ required: true }]">
+        <a-input-password v-model:value="formState.user.new_password" />
+      </a-form-item>
+
+      <a-form-item :name="['user', 'new_password_again']" label="再次输入密码" :rules="[{ required: true }]">
+        <a-input-password v-model:value="formState.user.new_password_again" />
       </a-form-item>
 
       <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-        <a-button type="primary" html-type="submit" @click="handleRegister()">注册</a-button>
-        <br>
-        <router-link to="../login">已有账号？点我登陆</router-link>
+        <a-button type="primary" html-type="submit" @click="handleModifyPW()">修改密码</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -66,21 +64,21 @@ export default defineComponent({
     };
     const formState = reactive({
       user: {
-        name: "",
         telphone: "",
-        password: "",
-        password_again: "",
+        old_password: "",
+        new_password: "",
+        new_password_again: "",
       },
     });
     const onFinish = (values) => {
       console.log("Success:", values);
     };
-    function handleRegister() {
+    function handleModifyPW() {
       let params = new URLSearchParams();
-      params.append("username", formState.user.name);
       params.append("telphone", formState.user.telphone);
-      params.append("password", formState.user.password);
-      params.append("password_again", formState.user.password_again);
+      params.append("old_password", formState.user.old_password);
+      params.append("new_password", formState.user.new_password);
+      params.append("new_password_again", formState.user.new_password_again);
       let url = path.website.register;
       postData(url, params).then((res) => {
         console.log(res);
@@ -99,7 +97,7 @@ export default defineComponent({
       onFinish,
       layout,
       validateMessages,
-      handleRegister,
+      handleModifyPW,
     };
   },
 });

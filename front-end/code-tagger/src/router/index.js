@@ -26,6 +26,12 @@ const routes = [
     component: () => import("../views/Register.vue"),
   },
   {
+    // 修改密码
+    path: "/modifypw",
+    name: "modifypw",
+    component: () => import("../views/ModifyPW.vue"),
+  },
+  {
     // 在线代码编辑器
     path: "/editor",
     name: "editor",

@@ -10,26 +10,22 @@
       @finishFailed="onFinishFailed"
       class="login-form"
     >
-      <h1 style="text-align: center">Log in</h1>
+      <h1 style="text-align: center">登陆</h1>
       <a-form-item
-        label="Telphone"
+        label="手机号"
         name="telphone"
         fieldDecoratorId
-        :rules="[{ required: true, message: 'Please input your telphone!' }]"
+        :rules="[{ required: true, message: '请输入手机号！' }]"
       >
         <a-input v-model:value="formState.telphone" />
       </a-form-item>
 
       <a-form-item
-        label="Password"
+        label="密码"
         name="password"
-        :rules="[{ required: true, message: 'Please input your password!' }]"
+        :rules="[{ required: true, message: '请输入密码！' }]"
       >
         <a-input-password v-model:value="formState.password" />
-      </a-form-item>
-
-      <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
-        <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
       </a-form-item>
 
       <a-form-item name="login" :wrapper-col="{ offset: 8, span: 16 }">
@@ -40,10 +36,12 @@
           class="login-form-button"
           @click="handleLogin()"
         >
-          Log in
+          登陆
         </a-button>
         Or
-        <router-link to="../register">Register now!</router-link>
+        <router-link to="../register">立即注册</router-link>
+        <br>
+        <router-link to="../modifypw">修改密码</router-link>
       </a-form-item>
     </a-form>
   </div>
@@ -63,7 +61,6 @@ export default defineComponent({
     const formState = reactive({
       telphone: "",
       password: "",
-      remember: true,
     });
     const onFinish = (values) => {
       console.log("Success:", values);
