@@ -51,7 +51,6 @@ export default defineComponent({
     }
 
     function handleExit(){
-      // 还不太成功
       let params = new URLSearchParams();
       let url = path.website.exit;
       getData(url, params).then((res) => {

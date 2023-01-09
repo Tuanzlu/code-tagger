@@ -51,6 +51,8 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const router = useRouter();
+    
     const layout = {
       labelCol: {
         span: 8,
@@ -92,7 +94,7 @@ export default defineComponent({
         if (res.state === "success") {
           message.success(res.description);
           router.push({
-            name: "login",
+            name: "login", // 好像无法跳转？
           });
         } else {
           message.error(res.description);
