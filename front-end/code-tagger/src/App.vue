@@ -8,4 +8,9 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+#app {
+  margin: 0;
+  padding: 0;
+}
+</style>

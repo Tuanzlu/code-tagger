@@ -1,18 +1,21 @@
 <template>
   <div class="container">
-    <h1><center>Log in </center></h1>
+    
     <a-form
     :model="formState"
     name="basic"
     :label-col="{ span: 8 }"
-    :wrapper-col="{ span: 8 }"
+    :wrapper-col="{ span: 14 }"
     autocomplete="off"
     @finish="onFinish"
     @finishFailed="onFinishFailed"
+    class="login-form"
   >
+  <h1><center>Log in </center></h1>
     <a-form-item
       label="Telphone"
       name="telphone"
+      fieldDecoratorId
       :rules="[{ required: true, message: 'Please input your telphone!' }]"
     >
       <a-input v-model:value="formState.telphone" />
@@ -93,7 +96,18 @@ export default defineComponent({
 
 <style scoped>
 .container {
-  min-height: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-size: cover;
+  background: #eeeded;
+}
+.login-form{
+  border-radius: 6px;
+  background: #ffffff;
+  width: 350px;
+  padding: 25px 25px 5px 25px;
 }
 
 </style>
