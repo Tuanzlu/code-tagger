@@ -80,6 +80,7 @@ export default defineComponent({
         console.log(res);
         if (res.state === "success") {
           message.success(res.description);
+          //window.localStorage.setItem("userId", res.userId);
           window.localStorage.setItem("userId", "lqy");
           router.push({
             name: "code",
