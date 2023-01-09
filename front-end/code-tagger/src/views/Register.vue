@@ -47,6 +47,7 @@ import path from "@/api/path.js";
 import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
@@ -81,15 +82,18 @@ export default defineComponent({
     };
     function handleRegister(){
       let params = new URLSearchParams();
-      params.append('username', formState.name);
-      params.append('telphone', formState.telphone);
-      params.append('password', formState.password);
-      params.append('password_again', formState.password_again);
+      params.append('username', formState.user.name);
+      params.append('telphone', formState.user.telphone);
+      params.append('password', formState.user.password);
+      params.append('password_again', formState.user.password_again);
       let url = path.website.register;
       postData(url, params).then((res) => {
         console.log(res);
         if (res.state === "success") {
           message.success(res.description);
+          router.push({
+            name: "login",
+          });
         } else {
           message.error(res.description);
         }

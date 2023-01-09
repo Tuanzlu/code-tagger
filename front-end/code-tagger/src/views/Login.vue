@@ -47,8 +47,12 @@ import path from "@/api/path.js";
 import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
+
 export default defineComponent({
   setup() {
+    const router = useRouter();
+    
     const formState = reactive({
       telphone: '',
       password: '',

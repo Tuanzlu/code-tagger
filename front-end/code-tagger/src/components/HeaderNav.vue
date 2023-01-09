@@ -11,6 +11,7 @@
           <template #icon><UserOutlined /></template>
           <a-menu-item key="login"><router-link to="../login">Log in</router-link></a-menu-item>
           <a-menu-item key="register"><router-link to="../register">Register</router-link></a-menu-item>
+          <a-menu-item key="exit" @click="handleExit()">Exit</a-menu-item>
         
       </a-sub-menu>
     </a-menu>
@@ -19,6 +20,10 @@
 <script>
 import { defineComponent } from "vue";
 import { UserOutlined } from "@ant-design/icons-vue";
+import path from "@/api/path.js";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 export default defineComponent({
   props: {
@@ -44,11 +49,30 @@ export default defineComponent({
         name: "index",
       });
     }
+
+    function handleExit(){
+      // 还不太成功
+      let params = new URLSearchParams();
+      let url = path.website.exit;
+      getData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          message.success(res.description);
+          router.push({
+            name: "/",
+          });
+        } else {
+          message.error(res.description);
+        }
+      });
+    }
+
     return {
       curPage,
       logoUrl,
       changePage,
       toIndex,
+      handleExit,
     };
   },
 });
