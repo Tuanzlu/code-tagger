@@ -59,7 +59,7 @@ class code_DB(DB):
         outs = self.cursor.fetchall()
         return outs
 
-    def removeOneUser(self, userID):
+    def admin_removeUser(self, userID):
         self.execute("DELETE FROM Code WHERE userID='{}'".format(userID))
 
 
