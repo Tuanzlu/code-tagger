@@ -107,7 +107,7 @@ export default defineComponent({
     const code = ref("");
     let selectValue = "cpp";
     const options = reactive({
-      style: { height: "400px" },
+      style: { minHeight: "400px" },
       mode: "text/x-c++src",
       spellcheck: true,
       autofocus: true,
