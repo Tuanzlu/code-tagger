@@ -2,10 +2,13 @@ from app.User import User
 from flask import request, session, jsonify, render_template
 from db.user_db import user_DB
 from db.code_db import code_DB
-
+from db.mark_db import mark_DB
+from db.label_db import label_DB
 
 user = user_DB()
 codeDB = code_DB()
+markDB = mark_DB()
+labelDB = label_DB()
 
 
 # 两个函数，用于将flask_sql的输出转化为可以直接网络传输的json格式
@@ -94,8 +97,11 @@ def removeUser():
         return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
         user.removeUser(username, password, telphone)
-        codeDB.removeOneUser(username)
+        markDB.admin_removeUser(username)
+        labelDB.admin_removeUser(username)
+        codeDB.admin_removeUser(username)
         return jsonify({"state":'success', "description": "success"})
+
 
 
 @User.route('/modifyPassword', methods=['POST'])
@@ -148,4 +154,7 @@ def admin_removeUser():
         return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
         user.admin_removeUser(username)
+        markDB.admin_removeUser(username)
+        labelDB.admin_removeUser(username)
+        codeDB.admin_removeUser(username)
         return jsonify({"state": 'success', "description": "success"})
