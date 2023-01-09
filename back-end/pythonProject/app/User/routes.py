@@ -143,6 +143,9 @@ def admin_removeUser():
     res_p = temp[0]
     if adminpassword != res_p:
         return jsonify({"state": 'fail', "description": "Wrong password"})
+    res_n = user.admin_checkUser(username)
+    if res_n == None:
+        return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
         user.admin_removeUser(username)
-        return jsonify({"state":'success', "description": "success"})
+        return jsonify({"state": 'success', "description": "success"})
