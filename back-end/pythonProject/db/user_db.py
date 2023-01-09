@@ -55,6 +55,10 @@ class user_DB(DB):
     def admin_checkUser(self, username):
         self.cursor.execute("SELECT * FROM users WHERE username='{}'".format(username))
         return self.cursor.fetchone()
+
+    def GetUsername(self, telphone):
+        self.cursor.execute("SELECT username FROM users WHERE telphone='{}'".format(telphone))
+        return self.cursor.fetchone()
     
     
 if __name__ == "__main__":
