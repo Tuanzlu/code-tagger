@@ -55,6 +55,12 @@ const routes = [
     name: "relation",
     component: () => import("../views/RelationManage.vue"),
   },
+  {
+    // 所有用户列表
+    path: "/alluser",
+    name: "alluser",
+    component: () => import("../views/AllUser.vue"),
+  }
 ];
 
 const router = createRouter({

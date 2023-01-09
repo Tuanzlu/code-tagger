@@ -11,6 +11,7 @@
           <template #icon><UserOutlined /></template>
           <a-menu-item key="login"><router-link to="../login">Log in</router-link></a-menu-item>
           <a-menu-item key="register"><router-link to="../register">Register</router-link></a-menu-item>
+          <a-menu-item key="exit" @click="handleAdmin()">Admin</a-menu-item>
           <a-menu-item key="exit" @click="handleExit()">Exit</a-menu-item>
         
       </a-sub-menu>
@@ -58,7 +59,24 @@ export default defineComponent({
         if (res.state === "success") {
           message.success(res.description);
           router.push({
-            name: "/",
+            name: "",
+          });
+        } else {
+          message.error(res.description);
+        }
+      });
+    }
+
+    function handleAdmin(){
+      // 待补充判断是否为admin
+      let params = new URLSearchParams();
+      let url = path.website.exit;
+      getData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          message.success(res.description);
+          router.push({
+            name: "alluser",
           });
         } else {
           message.error(res.description);
@@ -72,6 +90,7 @@ export default defineComponent({
       changePage,
       toIndex,
       handleExit,
+      handleAdmin,
     };
   },
 });
