@@ -50,12 +50,6 @@ const routes = [
     component: () => import("../views/TagManage.vue"),
   },
   {
-    // 标注关系库
-    path: "/relation",
-    name: "relation",
-    component: () => import("../views/RelationManage.vue"),
-  },
-  {
     // 所有用户列表
     path: "/alluser",
     name: "alluser",
