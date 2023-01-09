@@ -36,12 +36,18 @@
     </a-form-item>
 
     <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
-      <a-button type="primary" html-type="submit">Register!</a-button>
+      <a-button type="primary" html-type="submit" @click="handleRegister()">Register!</a-button>
+      <router-link to="../login">  Already have an account?</router-link>
     </a-form-item>
   </a-form>
 </template>
 <script>
 import { defineComponent, reactive } from 'vue';
+import path from "@/api/path.js";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import { message } from "ant-design-vue";
+
 export default defineComponent({
   setup() {
     const layout = {
@@ -73,11 +79,28 @@ export default defineComponent({
     const onFinish = values => {
       console.log('Success:', values);
     };
+    function handleRegister(){
+      let params = new URLSearchParams();
+      params.append('username', formState.name);
+      params.append('telphone', formState.telphone);
+      params.append('password', formState.password);
+      params.append('password_again', formState.password_again);
+      let url = path.website.register;
+      postData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          message.success(res.description);
+        } else {
+          message.error(res.description);
+        }
+      });
+    }
     return {
       formState,
       onFinish,
       layout,
       validateMessages,
+      handleRegister,
     };
   },
 });
