@@ -48,6 +48,9 @@ class label_DB(DB):
         self.cursor.execute("SELECT * FROM Label")
         return self.cursor.fetchall()
 
+    def admin_removeUser(self, userID):
+        self.execute("DELETE FROM Label WHERE userID='{}'".format(userID))
+
 if __name__ == "__main__":
     label1 = label_DB()
     print("first print...")
