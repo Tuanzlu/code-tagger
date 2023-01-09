@@ -144,5 +144,5 @@ def admin_removeUser():
     if adminpassword != res_p:
         return jsonify({"state": 'fail', "description": "Wrong password"})
     else:
-        user.removeUser(username)
+        user.admin_removeUser(username)
         return jsonify({"state":'success', "description": "success"})
