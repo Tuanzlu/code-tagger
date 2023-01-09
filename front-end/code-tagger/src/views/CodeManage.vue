@@ -128,8 +128,8 @@ export default {
       },
     ]);
     let lang = ref("c");
-    // const userId = window.localStorage.getItem("userId");
-    let userId = "lqy";
+    const userId = window.localStorage.getItem("userId");
+    // let userId = "lqy";
     let codeName = ref("");
     let modifyingName = ref("");
     getCodeList();
