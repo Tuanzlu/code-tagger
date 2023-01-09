@@ -52,7 +52,11 @@ class user_DB(DB):
     def admin_removeUser(self, username):
         self.execute("DELETE FROM users WHERE username='{}'".format(username))
 
-
+    def admin_checkUser(self, username):
+        self.cursor.execute("SELECT * FROM users WHERE username='{}'".format(username))
+        return self.cursor.fetchone()
+    
+    
 if __name__ == "__main__":
     userdb = user_DB()
     print("first print...")
