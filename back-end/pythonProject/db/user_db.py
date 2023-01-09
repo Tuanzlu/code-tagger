@@ -18,6 +18,10 @@ class user_DB(DB):
         self.cursor.execute("SELECT * FROM users WHERE username != 'admin'")
         return self.cursor.fetchall()
 
+    def selectAllUserlist(self):
+        self.cursor.execute("SELECT username FROM users WHERE username != 'admin'")
+        return self.cursor.fetchall()
+    
     def removeUser(self, username, passwd, telphone):
         self.execute("DELETE FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
 
