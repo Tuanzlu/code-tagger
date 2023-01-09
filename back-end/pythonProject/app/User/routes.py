@@ -1,9 +1,11 @@
 from app.User import User
 from flask import request, session, jsonify, render_template
 from db.user_db import user_DB
+from db.code_db import code_DB
 
 
 user = user_DB()
+codeDB = code_DB()
 
 
 # 两个函数，用于将flask_sql的输出转化为可以直接网络传输的json格式
@@ -90,6 +92,7 @@ def removeUser():
         return jsonify({"state": 'fail', "description": "The input information is wrong, delete failed"})
     else:
         user.removeUser(username, password, telphone)
+        codeDB.removeOneUser(username)
         return jsonify({"state":'success', "description": "success"})
 
 
@@ -114,3 +117,30 @@ def modifyPassword():
         else:
             user.updatePassword(telphone, new_password)
             return jsonify({"state":'success', "description": "success"})
+
+
+@User.route('/getUserlist', methods=['POST'])
+def getUserlist():
+    adminpassword = request.form.get("adminpassword")
+    res = user.GetAdminPassword()
+    temp = list(res.values())
+    res_p = temp[0]
+    if adminpassword != res_p:
+        return jsonify({"state":'fail', "description": "Wrong password"})
+    else:
+        rst = user.selectAllUser()
+        return jsonify({'state': 'success', "rst": rst})
+
+
+@User.route('/admin_removeUser', methods=['POST'])
+def admin_removeUser():
+    adminpassword = request.form.get("adminpassword")
+    username = request.form.get("username")
+    res = user.GetAdminPassword()
+    temp = list(res.values())
+    res_p = temp[0]
+    if adminpassword != res_p:
+        return jsonify({"state": 'fail', "description": "Wrong password"})
+    else:
+        user.removeUser(username)
+        return jsonify({"state":'success', "description": "success"})

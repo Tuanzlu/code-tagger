@@ -59,6 +59,10 @@ class code_DB(DB):
         outs = self.cursor.fetchall()
         return outs
 
+    def removeOneUser(self, userID):
+        self.execute("DELETE FROM Code WHERE userID='{}'".format(userID))
+
+
 if __name__ == "__main__":
     code1 = code_DB()
     print("first print...")

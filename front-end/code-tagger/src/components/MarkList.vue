@@ -1,20 +1,23 @@
 <template>
-  <a-list style="width: 400px" :dataSource="MarkList">
-    <template #renderItem="{ item }">
-      <a-list-item>
-        <template #actions>
-          <a-popconfirm title="是否确定删除？" ok-text="Yes" cancel-text="No" @confirm="deleteOneMark(item)">
-            <a key="delete">删除</a>
-          </a-popconfirm>
-        </template>
-        <a-list-item-meta :description="item.code">
-          <template #title>
-            <a>{{ item.labelID }}</a>
+  <div>
+    <h3 :style="{ margin: '-38px 0 10px 0' }">标注关系</h3>
+    <a-list bordered style="width: 400px; white-space: pre-wrap" :dataSource="MarkList">
+      <template #renderItem="{ item }">
+        <a-list-item>
+          <template #actions>
+            <a-popconfirm title="是否确定删除？" ok-text="Yes" cancel-text="No" @confirm="deleteOneMark(item)">
+              <a key="delete">删除</a>
+            </a-popconfirm>
           </template>
-        </a-list-item-meta>
-      </a-list-item>
-    </template>
-  </a-list>
+          <a-list-item-meta :description="item.code">
+            <template #title>
+              <a>{{ item.labelID }}</a>
+            </template>
+          </a-list-item-meta>
+        </a-list-item>
+      </template>
+    </a-list>
+  </div>
 </template>
 
 <script>

@@ -15,7 +15,7 @@ class user_DB(DB):
         return self.cursor.lastrowid
 
     def selectAllUser(self):
-        self.cursor.execute("SELECT * FROM users")
+        self.cursor.execute("SELECT * FROM users WHERE username != 'admin'")
         return self.cursor.fetchall()
 
     def removeUser(self, username, passwd, telphone):
@@ -40,6 +40,14 @@ class user_DB(DB):
     def updatePassword(self, telphone, passwd):
         self.cursor.execute("UPDATE users SET passwd='{}' WHERE telphone='{}'".format(passwd, telphone))
         return self.cursor.fetchone()
+
+    def GetAdminPassword(self):
+        self.cursor.execute("SELECT passwd FROM users WHERE username = 'admin'")
+        return self.cursor.fetchone()
+
+    def admin_removeUser(self, username):
+        self.execute("DELETE FROM users WHERE username='{}'".format(username))
+
 
 if __name__ == "__main__":
     userdb = user_DB()
