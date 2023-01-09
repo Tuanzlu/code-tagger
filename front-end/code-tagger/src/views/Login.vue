@@ -15,7 +15,7 @@
       name="telphone"
       :rules="[{ required: true, message: 'Please input your telphone!' }]"
     >
-      <a-input v-model:value="formState.username" />
+      <a-input v-model:value="formState.telphone" />
     </a-form-item>
 
     <a-form-item
@@ -31,7 +31,7 @@
     </a-form-item>
 
     <a-form-item name="login" :wrapper-col="{ offset: 8, span: 16 }">
-      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button">
+      <a-button :disabled="disabled" type="primary" html-type="submit" class="login-form-button" @click="handleLogin()">
         Log in
       </a-button>
       Or
@@ -43,6 +43,10 @@
 </template>
 <script>
 import { defineComponent, reactive } from 'vue';
+import path from "@/api/path.js";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import { message } from "ant-design-vue";
 export default defineComponent({
   setup() {
     const formState = reactive({
@@ -56,10 +60,28 @@ export default defineComponent({
     const onFinishFailed = errorInfo => {
       console.log('Failed:', errorInfo);
     };
+    function handleLogin(){
+      let params = new URLSearchParams();
+      params.append('telphone', formState.telphone);
+      params.append('password', formState.password);
+      let url = path.website.login;
+      postData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          message.success(res.description);
+          router.push({
+            name: "code",
+          });
+        } else {
+          message.error(res.description);
+        }
+      });
+    }
     return {
       formState,
       onFinish,
       onFinishFailed,
+      handleLogin,
     };
   },
 });

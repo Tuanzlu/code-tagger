@@ -114,3 +114,30 @@ def modifyPassword():
         else:
             user.updatePassword(telphone, new_password)
             return jsonify({"state":'success', "description": "success"})
+
+
+@User.route('/getUserlist', methods=['POST'])
+def getUserlist():
+    adminpassword = request.form.get("adminpassword")
+    res = user.GetAdminPassword()
+    temp = list(res.values())
+    res_p = temp[0]
+    if adminpassword != res_p:
+        return jsonify({"state":'fail', "description": "Wrong password"})
+    else:
+        rst = user.selectAllUser()
+        return jsonify({'state': 'success', "rst": rst})
+
+
+@User.route('/admin_removeUser', methods=['POST'])
+def admin_removeUser():
+    adminpassword = request.form.get("adminpassword")
+    username = request.form.get("username")
+    res = user.GetAdminPassword()
+    temp = list(res.values())
+    res_p = temp[0]
+    if adminpassword != res_p:
+        return jsonify({"state": 'fail', "description": "Wrong password"})
+    else:
+        user.removeUser(username)
+        return jsonify({"state":'success', "description": "success"})
