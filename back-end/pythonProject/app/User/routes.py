@@ -43,7 +43,9 @@ def login():
     res_p = temp[0]
     if res_p == password:
         session['telphone'] = telphone
-        return jsonify({"state":'success', "description": "success"})
+        rst = user.GetUsername(telphone)
+        return jsonify({'state': 'success', "rst": rst})
+
     else:
         return jsonify({"state":'fail', "description": "Wrong password"})
 
