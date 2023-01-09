@@ -1,12 +1,15 @@
 <template>
-  <h1><center>Register</center></h1>
-  <a-form
+  <div class="container">
+    <a-form
     :model="formState"
     v-bind="layout"
     name="nest-messages"
     :validate-messages="validateMessages"
     @finish="onFinish"
+    class="login-form"
   >
+    <h1><center>Register</center></h1>
+
     <a-form-item 
       :name="['user', 'name']" 
       label="Name" 
@@ -37,10 +40,14 @@
 
     <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
       <a-button type="primary" html-type="submit" @click="handleRegister()">Register!</a-button>
+      <br>
       <router-link to="../login">  Already have an account?</router-link>
     </a-form-item>
+
   </a-form>
+  </div>
 </template>
+
 <script>
 import { defineComponent, reactive } from 'vue';
 import path from "@/api/path.js";
@@ -58,7 +65,7 @@ export default defineComponent({
         span: 8,
       },
       wrapperCol: {
-        span: 8,
+        span: 16,
       },
     };
     const validateMessages = {
@@ -94,7 +101,7 @@ export default defineComponent({
         if (res.state === "success") {
           message.success(res.description);
           router.push({
-            name: "login", // 好像无法跳转？
+            name: "login",
           });
         } else {
           message.error(res.description);
@@ -111,3 +118,21 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-size: cover;
+  background: #eeeded;
+}
+.login-form{
+  border-radius: 6px;
+  background: #ffffff;
+  width: 450px;
+  padding: 25px 25px 5px 25px;
+}
+
+</style>
