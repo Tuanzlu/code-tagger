@@ -11,7 +11,7 @@
               <p>
                 <label>确定删除{{ deletingRecord }}?</label>
               </p>
-              <p><label>输入管理员密码：</label><a-input style="width: 200px" v-model:value="admin_pw" /></p>
+              <p><label>输入管理员密码：</label><a-input-password style="width: 200px" v-model:value="admin_pw" /></p>
             </div>
             <template #footer>
               <a-button key="back" @click="handleCancel">取消</a-button>
@@ -36,31 +36,6 @@ export default defineComponent({
     HeaderAdminNav,
   },
   setup() {
-    /*
-    const dataSource = reactive([
-      {
-        username: "John Brown",
-        telphone: "111",
-        numFile: 1,
-        numTag: 2,
-        numRelation: 3,
-      },
-      {
-        username: "Jim Green",
-        telphone: "222",
-        numFile: 1,
-        numTag: 2,
-        numRelation: 3,
-      },
-      {
-        username: "Joe Black",
-        telphone: "333",
-        numFile: 1,
-        numTag: 2,
-        numRelation: 3,
-      },
-    ]);
-    */
     const dataSource = ref([]);
     getDataList();
     let admin_pw = ref("");
@@ -68,48 +43,36 @@ export default defineComponent({
     let deletingRecord = ref("");
     const showModal = (record) => {
       deletingRecord.value = record.username;
-      console.log(deletingRecord.value);
+      // console.log(deletingRecord.value);
       visible.value = true;
     };
     const loading = reactive(false);
     const columns = reactive([
       {
-        name: "_id",
-        title: "ID",
-        dataIndex: "_id",
-        align: "center",
-        key: "_id",
-      },
-      {
-        name: "Username",
         title: "用户名",
         dataIndex: "username",
         align: "center",
         key: "username",
       },
       {
-        name: "Telphone",
         title: "手机号",
         dataIndex: "telphone",
         align: "center",
         key: "telphone",
       },
       {
-        name: "Code Files",
         title: "代码文件",
         dataIndex: "numFile",
         align: "center",
         key: "numFile",
       },
       {
-        name: "Tags",
         title: "标签",
         dataIndex: "numTag",
         align: "center",
         key: "numTag",
       },
       {
-        name: "Relations",
         title: "标注关系",
         dataIndex: "numRelation",
         align: "center",
@@ -137,6 +100,7 @@ export default defineComponent({
       let params = new URLSearchParams();
       params.append("userId", deletingRecord.value);
       params.append("adminpassword", admin_pw);
+      console.log(admin_pw);
       let url = path.website.admin_removeUser;
 
       getData(url, params).then((res) => {
@@ -159,7 +123,7 @@ export default defineComponent({
       let url = path.website.getUserList;
       getData(url, params).then((res) => {
         console.log(res);
-        dataSource.value = res.rst;
+        dataSource.value = res;
       });
 
       console.log(dataSource);

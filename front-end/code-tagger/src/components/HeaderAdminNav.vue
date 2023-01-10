@@ -8,7 +8,7 @@
         <template #icon><UserOutlined /></template>
         
         <a-menu-item> 
-          用户名：{{ userId }} 
+          <router-link to="../alluser">用户名：{{ userId }}</router-link>
         </a-menu-item>
         
         <a-menu-item key="modifypw">
