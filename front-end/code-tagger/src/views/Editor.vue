@@ -70,13 +70,15 @@ import HeaderNav from "@/components/HeaderNav.vue";
 import { Codemirror } from "vue-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { cpp } from "@codemirror/lang-cpp";
+import { python } from "@codemirror/lang-python";
+import { java } from "@codemirror/lang-java";
+import { php } from "@codemirror/lang-php";
 import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import path from "@/api/path.js";
 import { useRouter, useRoute } from "vue-router";
 import MarkList from "@/components/MarkList.vue";
 import { message } from "ant-design-vue";
-// import { oneDark } from "@codemirror/theme-one-dark";
 import { reactive, defineComponent, ref, toRefs, onMounted } from "vue";
 import { FolderOutlined, LeftSquareOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
@@ -105,7 +107,6 @@ export default defineComponent({
     let label = ref("");
     let selectCode = ref("");
     const code = ref("");
-    let selectValue = "cpp";
     const options = reactive({
       style: { minHeight: "400px" },
       mode: "text/x-c++src",
@@ -128,18 +129,21 @@ export default defineComponent({
         value: "js",
         label: "Javascript",
       },
+      {
+        value: "python",
+        label: "Python",
+      },
+      {
+        value: "Java",
+        label: "Java",
+      },
+      {
+        value: "php",
+        label: "PHP",
+      },
     ]);
 
-    const labelOptions = ref([
-      {
-        value: "test_label_1",
-        label: "test_label_1",
-      },
-      {
-        value: "test_label_2",
-        label: "test_label_2",
-      },
-    ]);
+    const labelOptions = ref([]);
 
     let userId = "lqy";
     let codeId = route.query.codeId;
@@ -208,12 +212,24 @@ export default defineComponent({
     function changeMode(mode) {
       if (mode === "c") {
         options.extensions = [cpp()];
-        selectValue = "cpp";
+        lang.value = "cpp";
         options.mode = "text/x-c++src";
       } else if (mode === "js") {
         options.extensions = [javascript()];
-        selectValue = "javascript";
+        lang.value = "javascript";
         options.mode = "text/x-javascript";
+      } else if (mode === "python") {
+        options.extensions = [python()];
+        lang.value = "python";
+        options.mode = "text/x-python";
+      } else if (mode === "php") {
+        options.extensions = [php()];
+        lang.value = "php";
+        options.mode = "text/x-php";
+      } else if (mode === "java") {
+        options.extensions = [java()];
+        lang.value = "java";
+        options.mode = "text/x-java";
       }
     }
 
@@ -298,7 +314,6 @@ export default defineComponent({
       markRF,
       code,
       lang,
-      selectValue,
       ...toRefs(options),
       modifyCode,
       deleteCode,

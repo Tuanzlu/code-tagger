@@ -9,7 +9,11 @@
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/lang-html": "^6.4.0",
+    "@codemirror/lang-java": "^6.0.1",
     "@codemirror/lang-javascript": "^6.1.2",
+    "@codemirror/lang-php": "^6.0.1",
+    "@codemirror/lang-python": "^6.1.1",
     "@codemirror/theme-one-dark": "^6.1.0",
     "ant-design-vue": "^3.2.14",
     "axios": "^1.2.2",

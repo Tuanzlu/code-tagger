@@ -69,7 +69,7 @@ export default defineComponent({
       postData(url, params).then((res) => {
         console.log(res);
         if (res.state === "success") {
-          message.success(res.description);
+          message.success(res.state);
           window.localStorage.setItem("userId", res.rst.username);
           if (res.rst.username === "admin") {
             router.push({

@@ -127,6 +127,18 @@ export default {
         value: "js",
         label: "Javascript",
       },
+      {
+        value: "python",
+        label: "Python",
+      },
+      {
+        value: "Java",
+        label: "Java",
+      },
+      {
+        value: "php",
+        label: "PHP",
+      },
     ]);
     let lang = ref("c");
     const userId = window.localStorage.getItem("userId");
