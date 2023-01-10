@@ -6,9 +6,19 @@
     <a-menu style="justify-content: flex-end" mode="horizontal" @click="changePage">
       <a-sub-menu key="person">
         <template #icon><UserOutlined /></template>
-        <a-menu-item> 用户名：{{ userId }} </a-menu-item>
-        <a-menu-item key="modifypw"><router-link to="../modifypw">修改密码</router-link></a-menu-item>
-        <a-menu-item key="intro"><router-link to="../intro">功能介绍</router-link></a-menu-item>
+        
+        <a-menu-item> 
+          用户名：{{ userId }} 
+        </a-menu-item>
+        
+        <a-menu-item key="modifypw">
+          <router-link to="../modifypw">修改密码</router-link>
+        </a-menu-item>
+        
+        <a-menu-item key="intro">
+          <router-link to="../intro">功能介绍</router-link>
+        </a-menu-item>
+        
         <a-menu-item key="exit" @click="handleExit()">退出</a-menu-item>
       </a-sub-menu>
     </a-menu>

@@ -81,7 +81,8 @@ export default defineComponent({
             });
           }
         } else {
-          message.error(res.state);
+          // message.error(res.state);
+          message.error(res.description);
         }
       });
     }

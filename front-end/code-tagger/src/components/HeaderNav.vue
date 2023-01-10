@@ -8,11 +8,30 @@
       <a-menu-item v-if="!isVisitor" key="tag">标注库</a-menu-item>
       <a-sub-menu key="person">
         <template #icon><UserOutlined /></template>
-        <a-menu-item v-if="!isVisitor"> 用户名：{{ userId }} </a-menu-item>
-        <a-menu-item v-if="isVisitor" key="login"><router-link to="../login">登录</router-link></a-menu-item>
-        <a-menu-item v-if="isVisitor" key="register"><router-link to="../register">注册</router-link></a-menu-item>
-        <a-menu-item key="modifypw"><router-link to="../modifypw">修改密码</router-link></a-menu-item>
-        <a-menu-item key="intro"><router-link to="../intro">功能介绍</router-link></a-menu-item>
+        <a-menu-item v-if="!isVisitor"> 
+          用户名：{{ userId }} 
+        </a-menu-item>
+
+        <a-menu-item key="intro">
+          <router-link to="../intro">功能介绍</router-link>
+        </a-menu-item>
+
+        <a-menu-item v-if="isVisitor" key="login">
+          <router-link to="../login">登录</router-link>
+        </a-menu-item>
+
+        <a-menu-item v-if="isVisitor" key="register">
+          <router-link to="../register">注册</router-link>
+        </a-menu-item>
+
+        <a-menu-item key="modifypw">
+          <router-link to="../modifypw">修改密码</router-link>
+        </a-menu-item>
+
+        <a-menu-item v-if="!isVisitor" key="remove">
+          <router-link to="../remove">注销</router-link>
+        </a-menu-item>
+
         <a-menu-item v-if="!isVisitor" key="exit" @click="handleExit()">退出</a-menu-item>
       </a-sub-menu>
     </a-menu>

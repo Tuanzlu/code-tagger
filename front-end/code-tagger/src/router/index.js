@@ -20,6 +20,12 @@ const routes = [
     component: () => import("../views/Register.vue"),
   },
   {
+    // 注销
+    path: "/remove",
+    name: "remove",
+    component: () => import("../views/RemoveUser.vue"),
+  },
+  {
     // 修改密码
     path: "/modifypw",
     name: "modifypw",
@@ -69,7 +75,7 @@ router.beforeEach((to, from, next) => {
   if (userId === null) {
     console.log(userId);
     console.log(to);
-    if (to.path !== "/intro" && to.path !== "/register" && to.path !== "/login" && to.path !== "/modifypw") {
+    if (to.path !== "/intro" && to.path !== "/register" && to.path !== "/login" && to.path !== "/modifypw"  && to.path !== "/remove") {
       return router.replace({
         name: "login",
       });
