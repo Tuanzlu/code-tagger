@@ -99,11 +99,10 @@ export default defineComponent({
     function handleDel() {
       let params = new URLSearchParams();
       params.append("userId", deletingRecord.value);
-      params.append("adminpassword", admin_pw);
+      params.append("adminpassword", admin_pw.value);
       console.log(admin_pw);
       let url = path.website.admin_removeUser;
-
-      getData(url, params).then((res) => {
+      postData(url, params).then((res) => {
         console.log(res);
         if (res.state === "success") {
           visible.value = false;
