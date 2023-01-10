@@ -169,6 +169,7 @@ export default {
         CodeDataSource.value = res.rst;
         CodePagination.total = CodeDataSource.value.length;
       });
+      // console.log(CodeDataSource);
     }
 
     const handleSelectChange = (value) => {

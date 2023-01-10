@@ -1,11 +1,29 @@
 <template>
   <header-admin-nav></header-admin-nav>
   <div class="allUser">
-    <a-table bordered :columns="columns" :data-source="dataSource" :loading="loading" :pagination="pagination">
+    <a-table 
+      bordered :columns="columns" 
+      :data-source="dataSource" 
+      :loading="loading" 
+      :pagination="pagination">
       <template #title>用户管理</template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'del'">
-          <a-button @click="handleDel(record)">删除用户</a-button>
+          <a-button danger @click="showModal">删除用户</a-button>
+          <a-modal v-model:visible="visible" @ok="handleDel(record)">
+            <div style="margin: 20px">
+              <p>
+                <label>确定删除{{record}}?</label>
+              </p>
+              <p>
+                <label>输入管理员密码：</label><a-input style="width: 200px" v-model:value="admin_pw" />
+              </p>
+            </div>
+            <template #footer>
+              <a-button key="back" @click="handleCancel">取消</a-button>
+              <a-button key="submit" type="primary" @click="handleDel(record)">确认</a-button>
+           </template>
+          </a-modal>
         </template>
       </template>
     </a-table>
@@ -14,12 +32,17 @@
 <script>
 import { defineComponent, reactive, ref } from "vue";
 import HeaderAdminNav from "@/components/HeaderAdminNav.vue";
+import { postData } from "@/api/webpost";
+import { getData } from "@/api/webget";
+import path from "@/api/path.js";
+import { message } from "ant-design-vue";
 
 export default defineComponent({
   components: {
     HeaderAdminNav,
   },
   setup() {
+    /*
     const dataSource = reactive([
       {
         username: "John Brown",
@@ -43,8 +66,23 @@ export default defineComponent({
         numRelation: 3,
       },
     ]);
+    */
+    const dataSource = ref([]);
+    getDataList();
+    let admin_pw = ref("");
+    const visible = ref(false);
+    const showModal = () => {
+      visible.value = true;
+    };
     const loading = reactive(false);
     const columns = reactive([
+      {
+        name: "_id",
+        title: "ID",
+        dataIndex: "_id",
+        align: "center",
+        key: "_id",
+      },
       {
         name: "Username",
         title: "用户名",
@@ -94,25 +132,53 @@ export default defineComponent({
       total: dataSource.length, //数据总数
     });
 
-    const handleDel = (value) => {
-      //执行删除接口，删除一条数据
+    const handleCancel = () => {
+      visible.value = false;
+    };
+
+    function handleDel(record){
+      console.log(record);
+      let params = new URLSearchParams();
+      params.append("userId", record.username);
+      params.append("adminpassword", admin_pw);
+      let url = path.website.admin_removeUser;
+
+      getData(url, params).then((res) => {
+        console.log(res);
+        if (res.state === "success") {
+          visible.value = false;
+          getDataList();
+          message.success(res.description);
+        } else {
+          message.error(res.description);
+        }
+      });
       console.log(value);
     };
 
-    const getDataList = () => {
+    function getDataList() {
       //进入页面时加载用户数据
       //将用户数据赋值给dataSource即可
-      console.log("加载用户数据");
+      let params = new URLSearchParams();
+      let url = path.website.getUserList;
+      getData(url, params).then((res) => {
+        console.log(res);
+        dataSource.value = res.rst;
+      });
+
+      console.log(dataSource);
     };
 
-    //进入页面执行加载用户数据的函数
-    getDataList();
-
     return {
+      visible,
+      showModal,
       dataSource,
+      getDataList,
       loading,
       columns,
+      handleCancel,
       handleDel,
+      admin_pw,
       pagination,
     };
   },
