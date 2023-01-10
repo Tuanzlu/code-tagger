@@ -25,10 +25,18 @@ def getUser():
 def removeUser():
     if request.method == "GET":
         userId = str(request.args.get("userId"))
+        adminpassword = request.args.get("adminpassword")
     else:
         userId = str(request.form.get("userId"))
-    userDB.admin_removeUser(userId)
-    markDB.admin_removeUser(userId)
-    labelDB.admin_removeUser(userId)
-    codeDB.admin_removeUser(userId)
-    return jsonify({"state":'success', "description": "success"})
+        adminpassword = request.form.get("adminpassword")
+    res = userDB.GetAdminPassword()
+    temp = list(res.values())
+    res_p = temp[0]
+    if adminpassword != res_p:
+        return jsonify({"state": 'fail', "description": "Wrong password"})
+    else:
+        userDB.admin_removeUser(userId)
+        markDB.admin_removeUser(userId)
+        labelDB.admin_removeUser(userId)
+        codeDB.admin_removeUser(userId)
+        return jsonify({"state":'success', "description": "success"})

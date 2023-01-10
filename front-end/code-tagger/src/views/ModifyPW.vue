@@ -113,7 +113,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  min-height: 650px;
   background-size: cover;
   background: #eeeded;
 }

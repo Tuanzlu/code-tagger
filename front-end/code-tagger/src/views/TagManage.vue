@@ -1,5 +1,5 @@
 <template>
-  <header-nav current="label"></header-nav>
+  <header-nav current="tag"></header-nav>
 
   <div class="container">
     <div class="main">
@@ -25,9 +25,9 @@
             class="table"
             bordered
             :row-key="(record) => record.id"
+            :pagination="LabelPagination"
             :data-source="LabelDataSource"
             :columns="LabelColumns"
-            :scroll="scrollY"
           >
             <template #title>标签库</template>
             <template #bodyCell="{ column, record, text }">
@@ -60,7 +60,6 @@
                     >
                       <a style="margin: 0 0 0 5px">删除</a>
                     </a-popconfirm>
-                    <a style="margin: 0 5px" @click="lookAtLabel(record)">查看</a>
                   </span>
                 </div>
               </template>
@@ -91,12 +90,10 @@ export default {
     let userId = "lqy";
     let modifyingName = ref("");
     let modifyingIntro = ref("");
-    const router = useRouter();
-    let scrollY = reactive({ y: document.body.offsetHeight - 265 });
     const LabelPagination = reactive({
       total: 100,
       showTotal: (total) => `共 ${total} 条`,
-      pageSize: 50,
+      pageSize: 10,
       showQuickJumper: true,
     });
     let alldataList = [];
@@ -105,18 +102,19 @@ export default {
         title: "标签名称",
         key: "label_name",
         dataIndex: "label_name",
-        // width: "15%",
+        width: "25%",
       },
       {
         title: "标签简介",
         key: "label_intro",
         dataIndex: "label_intro",
-        // width: "15%",
+        width: "45%",
       },
       {
         title: "操作",
         dataIndex: "action",
         key: "action",
+        width: "30%",
       },
       // {
       //   title: "现有标注数",
@@ -144,6 +142,7 @@ export default {
       getData(url, params).then((res) => {
         console.log(res);
         LabelDataSource.value = res.rst;
+        LabelPagination.total = LabelDataSource.value.length;
       });
     }
 
@@ -224,16 +223,6 @@ export default {
       }
     }
 
-    function lookAtLabel(record) {
-      console.log(record);
-      router.push({
-        name: "relation",
-        query: {
-          labelId: record.label_name,
-        },
-      });
-    }
-
     // 删除一个代码文件
     function deleteOneLabel(record) {
       let params = new URLSearchParams();
@@ -250,14 +239,12 @@ export default {
     }
 
     return {
-      scrollY,
       LabelPagination,
       LabelColumns,
       LabelDataSource,
       alldataList,
       getLabelList,
       deleteOneLabel,
-      lookAtLabel,
       edit,
       cancel,
       save,
@@ -291,7 +278,7 @@ export default {
   height: 20px;
   margin: 20px 0;
 }
-.table_area {
+.table-area {
   height: 400px;
   /* border: 1px solid red; */
 }
