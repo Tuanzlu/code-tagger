@@ -52,6 +52,15 @@ class mark_DB(DB):
     def selectAll(self):
         self.cursor.execute("SELECT * FROM Mark")
         return self.cursor.fetchall()
+    
+    def getnumRelation(self,userID):
+        self.execute("SELECT num from (SELECT userID,count(userID) as num FROM Mark GROUP BY userID) where userID='{}'".format(userID))
+        rst = self.cursor.fetchone()
+        if not rst:
+            num = 0
+        else:
+            num = list(rst.values())[0]
+        return num 
 
     def admin_removeUser(self, userID):
         self.execute("DELETE FROM Mark WHERE userID='{}'".format(userID))

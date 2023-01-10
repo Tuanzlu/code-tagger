@@ -58,6 +58,15 @@ class code_DB(DB):
         self.cursor.execute("SELECT userID, code, code_name, create_time, language FROM Code WHERE userID = '{}' AND code_name='{}'".format(userID,c_name))
         outs = self.cursor.fetchall()
         return outs
+    
+    def getnumFile(self,userID):
+        self.execute("SELECT num from (SELECT userID,count(userID) as num FROM Code GROUP BY userID) where userID='{}'".format(userID))
+        rst = self.cursor.fetchone()
+        if not rst:
+            num = 0
+        else:
+            num = list(rst.values())[0]
+        return num 
 
     def admin_removeUser(self, userID):
         self.execute("DELETE FROM Code WHERE userID='{}'".format(userID))
