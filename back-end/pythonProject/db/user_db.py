@@ -36,6 +36,10 @@ class user_DB(DB):
     def checkUser(self, username, passwd, telphone):
         self.cursor.execute("SELECT * FROM users WHERE username='{}' AND passwd='{}' AND telphone='{}'".format(username, passwd, telphone))
         return self.cursor.fetchone()
+    
+    def Gettelphone(self, userID):
+        self.cursor.execute("SELECT telphone FROM users WHERE username='{}'".format(userID))
+        return self.cursor.fetchone()
 
     def GetSameUsername(self, username):
         self.cursor.execute("SELECT * FROM users WHERE username='{}'".format(username))
