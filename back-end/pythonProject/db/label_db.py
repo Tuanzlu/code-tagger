@@ -47,6 +47,15 @@ class label_DB(DB):
     def selectAll(self):
         self.cursor.execute("SELECT * FROM Label")
         return self.cursor.fetchall()
+    
+    def getnumTag(self,userID):
+        self.execute("SELECT num from (SELECT userID,count(userID) as num FROM Label GROUP BY userID) where userID='{}'".format(userID))
+        rst = self.cursor.fetchone()
+        if not rst:
+            num = 0
+        else:
+            num = list(rst.values())[0]
+        return num 
 
     def admin_removeUser(self, userID):
         self.execute("DELETE FROM Label WHERE userID='{}'".format(userID))
