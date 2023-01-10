@@ -19,7 +19,16 @@ def hello_world():
 @Admin.route('/getUsers', methods=["POST", "GET"])
 def getUser():
     rst = userDB.selectAllUserlist()
-    return jsonify({'state':'success', "rst":rst})
+    data = []
+    for n in rst:
+        temp = list(n.values())
+        name = temp[0]
+        mnum = markDB.getnumRelation(name)
+        cnum = codeDB.getnumFile(name)
+        lnum = labelDB.getnumTag(name)
+        tel = list(userDB.Gettelphone(name).values())[0]
+        data.append({"username":name, "telphone":tel, "numFile":cnum, "numTag":lnum, "numRelation":mnum})
+    return jsonify(data)
 
 @Admin.route('/removeUser', methods=["POST", "GET"])
 def removeUser():
