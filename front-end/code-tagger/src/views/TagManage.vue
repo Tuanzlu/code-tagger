@@ -60,6 +60,7 @@
                     >
                       <a style="margin: 0 0 0 5px">删除</a>
                     </a-popconfirm>
+                    <a style="margin: 0 0 0 5px" @click="lookAtMark(record)">查看</a>
                   </span>
                 </div>
               </template>
@@ -76,7 +77,6 @@ import HeaderNav from "@/components/HeaderNav.vue";
 import { postData } from "@/api/webpost";
 import { getData } from "@/api/webget";
 import path from "@/api/path.js";
-
 import { useRouter } from "vue-router";
 import { reactive, ref } from "vue";
 import { message } from "ant-design-vue";
@@ -85,6 +85,7 @@ import { cloneDeep } from "lodash-es";
 export default {
   components: { HeaderNav },
   setup() {
+    const router = useRouter();
     let labelName = ref("");
     let labelIntro = ref("");
     let userId = "lqy";
@@ -116,12 +117,6 @@ export default {
         key: "action",
         width: "30%",
       },
-      // {
-      //   title: "现有标注数",
-      //   key: "relation_time",
-      //   dataIndex: "relation_time",
-      //   // width: "20%",
-      // },
     ];
     const LabelDataSource = ref([]);
     const visible = ref(false);
@@ -238,7 +233,17 @@ export default {
       });
     }
 
+    function lookAtMark(record) {
+      router.push({
+        name: "mark",
+        query: {
+          labelId: record.label_name,
+        },
+      });
+    }
+
     return {
+      lookAtMark,
       LabelPagination,
       LabelColumns,
       LabelDataSource,

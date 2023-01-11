@@ -9,7 +9,7 @@
           <a-modal v-model:visible="visible" @ok="handleDel">
             <div style="margin: 20px">
               <p>
-                <label>确定删除{{ deletingRecord }}?</label>
+                <label>确定删除用户'{{ deletingRecord }}'？</label>
               </p>
               <p><label>输入管理员密码：</label><a-input-password style="width: 200px" v-model:value="admin_pw" /></p>
             </div>
@@ -123,9 +123,8 @@ export default defineComponent({
       getData(url, params).then((res) => {
         console.log(res);
         dataSource.value = res;
+        console.log(dataSource.value);
       });
-
-      console.log(dataSource);
     }
 
     return {

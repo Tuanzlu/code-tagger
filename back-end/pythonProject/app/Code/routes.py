@@ -117,6 +117,7 @@ def modifyCode():
         userId = str(request.form.get("userId"))
         codeId = request.form.get("codeId")
         code_new = request.form.get("code_new")
+        print(code_new)
         language = request.form.get("language")
     codeDB.oneUserModifyCode(userId, codeId, code_new, language)
     return jsonify({"state":'success', "description": "success"})

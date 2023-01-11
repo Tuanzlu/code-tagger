@@ -38,10 +38,10 @@ const routes = [
     component: () => import("../views/Editor.vue"),
   },
   {
-    // 代码库+标签库目录
-    path: "/personalIndex",
-    name: "personalIndex",
-    component: () => import("../views/PersonalIndex.vue"),
+    // 标注关系页面
+    path: "/mark",
+    name: "mark",
+    component: () => import("../views/Mark.vue"),
   },
   {
     // 代码库
@@ -73,14 +73,17 @@ router.beforeEach((to, from, next) => {
   console.log(userId);
 
   if (userId === null) {
-    console.log(userId);
-    console.log(to);
-    if (to.path !== "/intro" && to.path !== "/register" && to.path !== "/login" && to.path !== "/modifypw"  && to.path !== "/remove") {
+    if (
+      to.path !== "/intro" &&
+      to.path !== "/register" &&
+      to.path !== "/login" &&
+      to.path !== "/modifypw" &&
+      to.path !== "/remove"
+    ) {
       return router.replace({
         name: "login",
       });
     } else {
-      console.log(to);
       next();
     }
   } else {

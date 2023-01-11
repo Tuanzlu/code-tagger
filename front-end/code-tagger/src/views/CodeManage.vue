@@ -10,8 +10,7 @@
             <p><label>代码名称：</label><a-input style="width: 200px" v-model:value="codeName" /></p>
             <p>
               <label>代码语言：</label>
-              <a-select v-model:value="lang" :options="selectOptions" @change="handleSelectChange" style="width: 120px">
-              </a-select>
+              <a-select v-model:value="lang" :options="selectOptions" style="width: 120px"> </a-select>
             </p>
           </div>
           <template #footer>
@@ -103,32 +102,39 @@ export default {
         align: "center",
       },
       {
+        title: "编程语言",
+        key: "language",
+        dataIndex: "language",
+        width: "20%",
+        align: "center",
+      },
+      {
         title: "修改时间",
         key: "create_time",
         dataIndex: "create_time",
-        width: "40%",
+        width: "30%",
         align: "center",
       },
       {
         title: "操作",
         dataIndex: "action",
         key: "action",
-        width: "30%",
+        width: "20%",
         align: "center",
       },
     ];
     const CodeDataSource = ref([]);
     const selectOptions = ref([
       {
-        value: "c",
+        value: "C/C++",
         label: "C/C++",
       },
       {
-        value: "js",
+        value: "Javascript",
         label: "Javascript",
       },
       {
-        value: "python",
+        value: "Python",
         label: "Python",
       },
       {
@@ -136,11 +142,11 @@ export default {
         label: "Java",
       },
       {
-        value: "php",
+        value: "PHP",
         label: "PHP",
       },
     ]);
-    let lang = ref("c");
+    let lang = ref("C/C++");
     const userId = window.localStorage.getItem("userId");
     // let userId = "lqy";
     let codeName = ref("");
@@ -160,9 +166,7 @@ export default {
     };
     const save = (key) => {
       Object.assign(CodeDataSource.value.filter((item) => key === item.code_name)[0], editableData[key]);
-      console.log(editableData[key]);
       let item = JSON.parse(JSON.stringify(editableData[key]));
-      console.log(item);
       modifyCodeId(item.code_name);
       delete editableData[key];
     };
@@ -177,16 +181,10 @@ export default {
       };
       let url = path.website.getCodeList;
       getData(url, params).then((res) => {
-        console.log(res);
         CodeDataSource.value = res.rst;
         CodePagination.total = CodeDataSource.value.length;
       });
-      // console.log(CodeDataSource);
     }
-
-    const handleSelectChange = (value) => {
-      console.log(`selected ${value}`);
-    };
 
     const handleCancel = () => {
       visible.value = false;
@@ -199,12 +197,11 @@ export default {
       params.append("language", lang.value);
       let url = path.website.addCode;
       postData(url, params).then((res) => {
-        console.log(res);
         if (res.state === "success") {
           visible.value = false;
           getCodeList();
           codeName.value = "";
-          lang.value = "c";
+          lang.value = "C/C++";
           message.success(res.description);
         } else {
           message.error(res.description);
@@ -216,21 +213,18 @@ export default {
       if (code_name === modifyingName.value) {
         modifyingName.value = "";
       } else {
-        console.log(code_name);
         let params = new URLSearchParams();
         params.append("userId", userId);
         params.append("codeId", modifyingName.value);
         params.append("codeId_new", code_name);
         let url = path.website.modifyCodeID;
         postData(url, params).then((res) => {
-          console.log(res);
           getCodeList();
         });
       }
     }
 
     function lookAtCode(record) {
-      console.log(record);
       router.push({
         name: "editor",
         query: {
@@ -246,7 +240,6 @@ export default {
       params.append("codeId", record.code_name);
       let url = path.website.removeCode;
       postData(url, params).then((res) => {
-        console.log(res);
         message.success("删除成功");
         getCodeList();
       });
@@ -270,7 +263,6 @@ export default {
       showModal,
       codeName,
       handleCancel,
-      handleSelectChange,
     };
   },
 };

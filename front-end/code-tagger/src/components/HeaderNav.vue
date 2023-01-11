@@ -5,12 +5,10 @@
     </div>
     <a-menu style="justify-content: flex-end" :selectedKeys="curPage" mode="horizontal" @click="changePage">
       <a-menu-item v-if="isVisitor === false" key="code">代码库</a-menu-item>
-      <a-menu-item v-if="!isVisitor" key="tag">标注库</a-menu-item>
+      <a-menu-item v-if="!isVisitor" key="tag">标签库</a-menu-item>
       <a-sub-menu key="person">
         <template #icon><UserOutlined /></template>
-        <a-menu-item v-if="!isVisitor"> 
-          用户名：{{ userId }} 
-        </a-menu-item>
+        <a-menu-item v-if="!isVisitor"> 用户名：{{ userId }} </a-menu-item>
 
         <a-menu-item key="intro">
           <router-link to="../intro">功能介绍</router-link>
@@ -24,7 +22,7 @@
           <router-link to="../register">注册</router-link>
         </a-menu-item>
 
-        <a-menu-item key="modifypw">
+        <a-menu-item v-if="!isVisitor" key="modifypw">
           <router-link to="../modifypw">修改密码</router-link>
         </a-menu-item>
 
@@ -55,9 +53,7 @@ export default defineComponent({
   setup(props) {
     const router = useRouter();
     const userId = window.localStorage.getItem("userId");
-    console.log("userId:", userId);
     let isVisitor = ref(true);
-    console.log("isVisitor:", isVisitor.value);
     if (userId === null) {
       isVisitor.value = true;
     } else {
@@ -83,7 +79,6 @@ export default defineComponent({
       let params = new URLSearchParams();
       let url = path.website.exit;
       getData(url, params).then((res) => {
-        console.log(res);
         if (res.state === "success") {
           message.success(res.description);
           window.localStorage.removeItem("userId");

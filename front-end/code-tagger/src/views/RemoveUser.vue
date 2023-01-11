@@ -83,6 +83,7 @@ export default defineComponent({
         console.log(res);
         if (res.state === "success") {
           message.success(res.description);
+          window.localStorage.removeItem("userId");
           router.push({
             name: "register",
           });

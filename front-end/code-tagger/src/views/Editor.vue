@@ -44,7 +44,6 @@
       <div class="middle-view">
         <div style="width: 750px; margin-right: 20px">
           <codemirror
-            ref="cm"
             v-model="code"
             placeholder="Code gose here..."
             :style="style"
@@ -54,7 +53,6 @@
             :indent-with-tab="indentWithTab"
             :tabSize="tabSize"
             :extensions="extensions"
-            @focus="handleFocus"
             @mouseup="handleMouseEvent"
           />
         </div>
@@ -79,7 +77,7 @@ import path from "@/api/path.js";
 import { useRouter, useRoute } from "vue-router";
 import MarkList from "@/components/MarkList.vue";
 import { message } from "ant-design-vue";
-import { reactive, defineComponent, ref, toRefs, onMounted } from "vue";
+import { reactive, defineComponent, ref, toRefs } from "vue";
 import { FolderOutlined, LeftSquareOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({
@@ -103,7 +101,7 @@ export default defineComponent({
       visible.value = true;
       getLabelList();
     };
-    let lang = ref("c");
+    let lang = ref("C/C++");
     let label = ref("");
     let selectCode = ref("");
     const code = ref("");
@@ -116,21 +114,18 @@ export default defineComponent({
       tabSize: 2,
       extensions: [cpp()], //传递给CodeMirror EditorState。创建({扩展})
     });
-    const cm = ref();
-    onMounted(() => {
-      console.log(markRF.value);
-    });
+
     const selectOptions = ref([
       {
-        value: "c",
+        value: "C/C++",
         label: "C/C++",
       },
       {
-        value: "js",
+        value: "Javascript",
         label: "Javascript",
       },
       {
-        value: "python",
+        value: "Python",
         label: "Python",
       },
       {
@@ -138,14 +133,14 @@ export default defineComponent({
         label: "Java",
       },
       {
-        value: "php",
+        value: "PHP",
         label: "PHP",
       },
     ]);
 
     const labelOptions = ref([]);
 
-    let userId = "lqy";
+    let userId = window.localStorage.getItem("userId");
     let codeId = route.query.codeId;
 
     getCode();
@@ -157,7 +152,6 @@ export default defineComponent({
       };
       let url = path.website.getCode;
       getData(url, params).then((res) => {
-        console.log(res);
         code.value = res.rst[0].code;
         lang.value = res.rst[0].language;
         changeMode(lang.value);
@@ -173,7 +167,6 @@ export default defineComponent({
       params.append("code_new", code.value);
       let url = path.website.modifyCode;
       postData(url, params).then((res) => {
-        console.log(res);
         if (res.state === "success") {
           message.success("success");
         } else {
@@ -188,7 +181,6 @@ export default defineComponent({
       params.append("codeId", codeId);
       let url = path.website.removeCode;
       postData(url, params).then((res) => {
-        console.log(res);
         if (res.state === "success") {
           message.success("success");
           router.push({
@@ -199,36 +191,33 @@ export default defineComponent({
     }
 
     function handleMouseEvent(e) {
-      console.log(e);
       selectCode.value = window.getSelection().toString();
-      console.log(selectCode.value);
     }
 
     const handleSelectChange = (value) => {
-      console.log(`selected ${value}`);
       changeMode(value);
     };
 
     function changeMode(mode) {
-      if (mode === "c") {
+      if (mode === "C/C++") {
         options.extensions = [cpp()];
-        lang.value = "cpp";
+        lang.value = "C/C++";
         options.mode = "text/x-c++src";
-      } else if (mode === "js") {
+      } else if (mode === "Javascript") {
         options.extensions = [javascript()];
-        lang.value = "javascript";
-        options.mode = "text/x-javascript";
-      } else if (mode === "python") {
+        lang.value = "Javascript";
+        options.mode = "text/javascript";
+      } else if (mode === "Python") {
         options.extensions = [python()];
-        lang.value = "python";
+        lang.value = "Python";
         options.mode = "text/x-python";
-      } else if (mode === "php") {
+      } else if (mode === "PHP") {
         options.extensions = [php()];
-        lang.value = "php";
+        lang.value = "PHP";
         options.mode = "text/x-php";
-      } else if (mode === "java") {
+      } else if (mode === "Java") {
         options.extensions = [java()];
-        lang.value = "java";
+        lang.value = "Java";
         options.mode = "text/x-java";
       }
     }
@@ -246,7 +235,6 @@ export default defineComponent({
       }
       let url = path.website.addMark;
       postData(url, params).then((res) => {
-        console.log(res);
         if (res.state === "success") {
           visible.value = false;
           message.success(res.description);
@@ -266,10 +254,8 @@ export default defineComponent({
 
       let url = path.website.getLabelList;
       getData(url, params).then((res) => {
-        console.log(res);
         labelOptions.value = [];
         for (let i of res.rst) {
-          console.log(i);
           labelOptions.value.push({
             value: i.label_name,
             label: i.label_name,
@@ -281,25 +267,11 @@ export default defineComponent({
       });
     }
 
-    function handleFocus(e) {
-      console.log("focus:", e);
-      console.log(cm.value.cursor);
-    }
-
     function handleLabelChange(value) {
       label.value = value;
-      console.log(value);
     }
     const handleCancel = () => {
       visible.value = false;
-    };
-
-    const addItem = () => {
-      console.log("addItem");
-      labelOptions.value.push({
-        value: "test add",
-        label: "test add",
-      });
     };
 
     function changeAdding() {
@@ -310,18 +282,12 @@ export default defineComponent({
       addingLabel,
       adding,
       changeAdding,
-      addItem,
       markRF,
       code,
       lang,
       ...toRefs(options),
       modifyCode,
       deleteCode,
-      // mytest,
-      // handlecursorActivity,
-      handleFocus,
-      // handleReady,
-      cm,
       userId,
       codeId,
       getLabelList,

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 :style="{ margin: '-38px 0 10px 0' }">标注关系</h3>
-    <a-list bordered style="width: 400px; white-space: pre-wrap" :dataSource="MarkList">
+    <a-list item-layout="vertical" bordered style="width: 430px; white-space: pre-wrap" :dataSource="MarkList">
       <template #renderItem="{ item }">
         <a-list-item>
           <template #actions>
