@@ -218,7 +218,7 @@ export default {
       }
     }
 
-    // 删除一个代码文件
+    // 删除一个标签
     function deleteOneLabel(record) {
       let params = new URLSearchParams();
       params.append("userId", userId);
